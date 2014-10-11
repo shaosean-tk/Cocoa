@@ -5638,13 +5638,13 @@
    <SourceLine></SourceLine>
    <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Sub setSize Lib "Cocoa" Selector "setSize:" (aNSImage As Ptr, aNSSize As NSSize)</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>DIM aNSSize As NSSize</SourceLine>
    <SourceLine>aNSSize.Width = width</SourceLine>
    <SourceLine>aNSSize.Height = height</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Declare Sub setSize Lib "Cocoa" Selector "setSize:" (aNSImage As Ptr, aNSSize As NSSize)</SourceLine>
    <SourceLine>setSize me, aNSSize</SourceLine>
-   <SourceLine></SourceLine>
    <SourceLine>#else</SourceLine>
    <SourceLine>#pragma Unused width</SourceLine>
    <SourceLine>#pragma Unused height</SourceLine>
@@ -5883,6 +5883,90 @@
   <ItemDeclaration>mInstanceRef As Ptr</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mWidth</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mWidth As Integer = 32</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mWidth As Integer = 32</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mHeight</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mHeight As Integer = 32</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mHeight As Integer = 32</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Height</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Height As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Height As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>me.mHeight = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.SetSize me.Width, value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mHeight</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Width</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Width As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>me.mWidth = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.SetSize value, me.Height</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mWidth</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
  </Property>
  <ViewBehavior>
   <ViewProperty>
@@ -7010,7 +7094,7 @@
    </Editor>
    <Editor>
     <EditorIndex>2</EditorIndex>
-    <EditorLocation>NSImage.FromFolderItem</EditorLocation>
+    <EditorLocation>NSImage.Get</EditorLocation>
     <EditorPath>NSImage.</EditorPath>
     <EditingPartID>83466077</EditingPartID>
    </Editor>
