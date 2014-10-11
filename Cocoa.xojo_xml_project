@@ -384,7 +384,6 @@
  <Control>
   <ControlClass>TextArea</ControlClass>
   <ItemName>TextArea</ItemName>
-  <PropertyVal Name="TabPanelIndex"><Hex bytes="1">30</Hex></PropertyVal>
   <PropertyVal Name="DataField"></PropertyVal>
   <PropertyVal Name="DataSource"></PropertyVal>
   <PropertyVal Name="AutomaticallyCheckSpelling">True</PropertyVal>
@@ -418,11 +417,12 @@
   <PropertyVal Name="Border">True</PropertyVal>
   <PropertyVal Name="TabStop">True</PropertyVal>
   <PropertyVal Name="TabIndex"><Hex bytes="1">30</Hex></PropertyVal>
+  <PropertyVal Name="TabPanelIndex"><Hex bytes="1">30</Hex></PropertyVal>
   <PropertyVal Name="LockBottom">False</PropertyVal>
   <PropertyVal Name="LockRight">False</PropertyVal>
   <PropertyVal Name="LockTop">True</PropertyVal>
   <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="Height"><Hex bytes="3">333035</Hex></PropertyVal>
+  <PropertyVal Name="Height"><Hex bytes="3">333630</Hex></PropertyVal>
   <PropertyVal Name="Width"><Hex bytes="3">353630</Hex></PropertyVal>
   <PropertyVal Name="Top"><Hex bytes="2">3230</Hex></PropertyVal>
   <PropertyVal Name="Left"><Hex bytes="2">3230</Hex></PropertyVal>
@@ -2511,6 +2511,8 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function LocalizedName() As String</SourceLine>
+   <SourceLine>// Returns the name used as by default when publishing NSNetServices.</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
    <SourceLine>Declare Function localizedName Lib "Cocoa" Selector "localizedName" (currentHost As Ptr) As CFStringRef</SourceLine>
    <SourceLine>Return localizedName(CurrentHost)</SourceLine>
@@ -2531,6 +2533,8 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Name(Extends aNSHost As Ptr) As String</SourceLine>
+   <SourceLine>// Returns one of the hostnames of the receiver.</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
    <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (aNSHost As Ptr) As CFStringRef</SourceLine>
    <SourceLine>Return name(aNSHost)</SourceLine>
@@ -6467,15 +6471,431 @@
   </ItemSource>
  </Structure>
 </block>
+<block type="Module" ID="1714854946">
+ <ObjName>NSHost</ObjName>
+ <ObjContainerID>1021742600</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>ClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function ClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static classRef As Ptr = NSClassFromString("NSHost")</SourceLine>
+   <SourceLine>Return classRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <ExternalMethod>
+  <ItemName>NSClassFromString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (className As CFStringRef) As Ptr</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>className As CFStringRef</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <Method>
+  <ItemName>CurrentHost</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function CurrentHost() As NSHost</SourceLine>
+   <SourceLine>// Returns a NSHost object representing the host the process is running on.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function currentHost Lib "Cocoa" Selector "currentHost" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Static currentHost As NSHost = NEW NSHost(currentHost(NSHost.ClassRef))</SourceLine>
+   <SourceLine>Return currentHost</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>NSHost</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HostWithAddress</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function HostWithAddress(address As String) As NSHost</SourceLine>
+   <SourceLine>// Returns a NSHost with the Internet address &lt;address&gt;.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function hostWithAddress Lib "Cocoa" Selector "hostWithAddress:" (classRef As Ptr, address As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Return NEW NSHost(hostWithAddress(NSHost.ClassRef, address))</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused address</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>address As String</ItemParams>
+  <ItemResult>NSHost</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(anInstanceRef As Ptr)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>me.mInstanceRef = anInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>anInstanceRef As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HostWithName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function HostWithName(name As String) As NSHost</SourceLine>
+   <SourceLine>// Returns a host with a specific name.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function hostWithName Lib "Cocoa" Selector "hostWithName:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Return NEW NSHost(hostWithName(NSHost.ClassRef, name))</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused name</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>name As String</ItemParams>
+  <ItemResult>NSHost</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Address</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Address() As String</SourceLine>
+   <SourceLine>// Returns one of the network addresses of the receiver.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function address Lib "Cocoa" Selector "address" (aNSHost As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return address(me.mInstanceRef)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Addresses</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Addresses() As String()</SourceLine>
+   <SourceLine>// Returns all the network addresses of the receiver.</SourceLine>
+   <SourceLine>// Note: this is blocking and your application will lock up</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function addresses Lib "Cocoa" Selector "addresses" (aNSHost As Ptr) As Ptr  // NSArray</SourceLine>
+   <SourceLine>DIM addressesArray As Ptr = addresses(me.mInstanceRef)</SourceLine>
+   <SourceLine>Return NSArrayToXojoArray(addressesArray)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HostName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function HostName() As String</SourceLine>
+   <SourceLine>// Returns one of the hostnames of the receiver.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (aNSHost As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return name(me.mInstanceRef)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>LocalizedName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function LocalizedName() As String</SourceLine>
+   <SourceLine>// Returns the name used as by default when publishing NSNetServices.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function localizedName Lib "Cocoa" Selector "localizedName" (currentHost As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return localizedName(CurrentHost)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HostNames</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function HostNames() As String()</SourceLine>
+   <SourceLine>// Returns all the hostnames of the receiver.</SourceLine>
+   <SourceLine>// Note: this is blocking and your application will lock up</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function names Lib "Cocoa" Selector "names" (aNSHost As Ptr) As Ptr  // NSArray</SourceLine>
+   <SourceLine>DIM namesArray As Ptr = names(me.mInstanceRef)</SourceLine>
+   <SourceLine>Return NSArrayToXojoArray(namesArray)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused aNSHost</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSArrayToXojoArray</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function NSArrayToXojoArray(aNSArray As Ptr) As String()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function count Lib "Cocoa" Selector "count" (aNSArray As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function objectAtIndex Lib "Cocoa" Selector "objectAtIndex:" (aNSArray As Ptr, index As Integer) As CFStringRef  // NSObject</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM count As Integer = count(aNSArray)</SourceLine>
+   <SourceLine>DIM returnValue(0) As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (count &gt; 0) then</SourceLine>
+   <SourceLine>REDIM returnValue(count - 1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i as Integer = 0 to (count - 1)</SourceLine>
+   <SourceLine>returnValue.Append objectAtIndex(aNSArray, i)</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aNSArray As Ptr</ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>mInstanceRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mInstanceRef As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mInstanceRef As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>InstanceRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Property InstanceRef As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>InstanceRef As Ptr</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+</block>
 <block type="UIState" ID="0">
  <StudioWindowState>
   <Editors>
-   <EditorCount>1</EditorCount>
+   <EditorCount>3</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
     <EditorLocation>Window1</EditorLocation>
     <EditorPath></EditorPath>
     <EditingPartID>22886804</EditingPartID>
+   </Editor>
+   <Editor>
+    <EditorIndex>1</EditorIndex>
+    <EditorLocation>NSHost.HostNames</EditorLocation>
+    <EditorPath>NSHost.</EditorPath>
+    <EditingPartID>1714854946</EditingPartID>
+   </Editor>
+   <Editor>
+    <EditorIndex>2</EditorIndex>
+    <EditorLocation></EditorLocation>
+    <EditorPath>Cocoa.</EditorPath>
    </Editor>
    <SelectedTab>0</SelectedTab>
   </Editors>
