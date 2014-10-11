@@ -19,7 +19,7 @@
  <DefaultLanguage>0</DefaultLanguage>
  <CurrentLanguage>0</CurrentLanguage>
  <DefaultEncoding>0</DefaultEncoding>
- <BuildFlags>26880</BuildFlags>
+ <BuildFlags>18688</BuildFlags>
  <UseBuildsFolder>1</UseBuildsFolder>
  <WebApp>0</WebApp>
  <Icon>
@@ -5471,7 +5471,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Convert() As Picture</SourceLine>
-   <SourceLine>// Creates a Xojo picture object with the passed NSImage</SourceLine>
+   <SourceLine>// Creates a Xojo picture object from the passed NSImage</SourceLine>
    <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
    <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
    <SourceLine></SourceLine>
@@ -5526,77 +5526,13 @@
   <ItemResult>Picture</ItemResult>
  </Method>
  <Method>
-  <ItemName>Constructor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Constructor() As Ptr</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return init(alloc(NSClassFromString("NSImage")))</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>Ptr</ItemResult>
- </Method>
- <Method>
-  <ItemName>Constructor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor(value As String, width As Integer = -1, height As Integer = -1)</SourceLine>
-   <SourceLine>// first we try to find the image based on the name</SourceLine>
-   <SourceLine>//-- NSImage looks first in the image cache, then the app's main bundle for a file, and then the AppKit framework</SourceLine>
-   <SourceLine>// if NSImage does not find anything, we then look up for the file type</SourceLine>
-   <SourceLine>//-- a file type is either the file extension or the UTI</SourceLine>
-   <SourceLine>// if NSImage does not find anything, then let's load it from a URL</SourceLine>
-   <SourceLine>//-- in Cocoa a URL can either be a local (FolderItem) or remote location</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>if (not ImageNamed(value)) then</SourceLine>
-   <SourceLine>if (not ImageWithFileType(value)) then</SourceLine>
-   <SourceLine>if (not ImageWithContentsOfURL(value)) then</SourceLine>
-   <SourceLine>// umm, now what?</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (me.mHandle &lt;&gt; Nil) AND (width &gt; 0) AND (height &gt; 0) then</SourceLine>
-   <SourceLine>me.SetSize width, height</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#pragma Unused width</SourceLine>
-   <SourceLine>#pragma Unused height</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>value As String, width As Integer = -1, height As Integer = -1</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
   <ItemName>Operator_Convert</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
-   <SourceLine>Return me.mHandle</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -5626,78 +5562,70 @@
   <ItemResult></ItemResult>
  </Method>
  <Method>
-  <ItemName>ImageWithFileType</ItemName>
+  <ItemName>FromFileType</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function ImageWithFileType(fileType As String) As Boolean</SourceLine>
+   <SourceLine> Shared Function FromFileType(fileType As String) As NSImage</SourceLine>
    <SourceLine>// Returns a NSImage for the given file type</SourceLine>
-   <SourceLine>// DIM aNSImage As NSImage = NSImage.InitWithFileType("png")  // file extension, with or without the leading period</SourceLine>
-   <SourceLine>// DIM anotherNSImage As NSImage = NSImage.InitWithFileType("public.html")  // uti</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>if (Trim(FileType) &lt;&gt; "") then</SourceLine>
    <SourceLine>Declare Function iconForFileType Lib "Cocoa" Selector "iconForFileType:" (SharedWorkspace As Ptr, fileType As CFStringRef) As Ptr</SourceLine>
    <SourceLine>Declare Function sharedWorkspace Lib "Cocoa" Selector "sharedWorkspace" (classRef As Ptr) As Ptr</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>DIM theSharedWorkspace As Ptr = sharedWorkspace(NSClassFromString("NSWorkspace"))</SourceLine>
-   <SourceLine>me.mHandle = iconForFileType(theSharedWorkspace, FileType)</SourceLine>
+   <SourceLine>DIM theSharedWorkspace As Ptr = sharedWorkspace(NSWorkspaceClassRef)</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = iconForFileType(theSharedWorkspace, FileType)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Return (me.mHandle &lt;&gt; Nil)</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
    <SourceLine>#else</SourceLine>
    <SourceLine>#pragma Unused fileType</SourceLine>
    <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
   <ItemParams>fileType As String</ItemParams>
-  <ItemResult>Boolean</ItemResult>
+  <ItemResult>NSImage</ItemResult>
  </Method>
  <Method>
-  <ItemName>ImageWithContentsOfURL</ItemName>
+  <ItemName>FromURL</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function ImageWithContentsOfURL(URL As String) As Boolean</SourceLine>
+   <SourceLine> Shared Function FromURL(URL As String) As NSImage</SourceLine>
    <SourceLine>// Returns a NSImage if URL is valid image, Nil otherwise</SourceLine>
-   <SourceLine>// DIM aNSImage As NSImage = NSImage.InitWithContentsOfURL("http://example.org/logo.jpg")</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>if (Trim(URL) &lt;&gt; "") then</SourceLine>
    <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function initWithContentsOfURL Lib "Cocoa" Selector "initWithContentsOfURL:" (NSImageClass As Ptr, aNSURL As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (NSURLClass As Ptr, aString As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithContentsOfURL Lib "Cocoa" Selector "initWithContentsOfURL:" (NSImageClassRef As Ptr, aNSURL As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (NSURLClassRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
    <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), URL)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>me.mHandle = initWithContentsOfURL(alloc(NSClassFromString("NSImage")), aNSURL)</SourceLine>
-   <SourceLine>end if</SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSURLClassRef), URL)</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = initWithContentsOfURL(alloc(NSImageClassRef), aNSURL)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>release aNSURL</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Return (me.mHandle &lt;&gt; Nil)</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
    <SourceLine>#else</SourceLine>
    <SourceLine>#pragma Unused URL</SourceLine>
    <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
   <ItemParams>URL As String</ItemParams>
-  <ItemResult>Boolean</ItemResult>
+  <ItemResult>NSImage</ItemResult>
  </Method>
  <Method>
   <ItemName>SetSize</ItemName>
@@ -5708,6 +5636,7 @@
    <SourceLine>Sub SetSize(width As Integer, height As Integer)</SourceLine>
    <SourceLine>// Sets the size of the NSImage when converting to a Xojo picture object</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
    <SourceLine>DIM aNSSize As NSSize</SourceLine>
    <SourceLine>aNSSize.Width = width</SourceLine>
@@ -5720,6 +5649,7 @@
    <SourceLine>#pragma Unused width</SourceLine>
    <SourceLine>#pragma Unused height</SourceLine>
    <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -5735,36 +5665,222 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function ImageNamed(name As String) As Boolean</SourceLine>
+   <SourceLine> Shared Function ImageNamed(name As String) As NSImage</SourceLine>
+   <SourceLine>// Returns the image object associated with the specified name.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (NSImageClass As Ptr, name As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>me.mHandle = imageNamed(NSClassFromString("NSImage"), name)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return (me.mHandle &lt;&gt; Nil)</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = imageNamed(NSImageClassRef, name)</SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
    <SourceLine>#else</SourceLine>
    <SourceLine>#pragma Unused name</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>name As String</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSImageClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NSImageClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static NSImageClassRef As Ptr = NSClassFromString("NSImage")</SourceLine>
+   <SourceLine>Return NSImageClassRef</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>name As String</ItemParams>
-  <ItemResult>Boolean</ItemResult>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
  </Method>
- <Property>
-  <ItemName>mHandle</ItemName>
+ <Method>
+  <ItemName>Constructor</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mHandle As Ptr</SourceLine>
+   <SourceLine>Sub Constructor(instanceRef As Ptr)</SourceLine>
+   <SourceLine>// New instance from class method</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>me.mInstanceRef = instanceRef</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>instanceRef As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSURLClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NSURLClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static NSURLClassRef As Ptr = NSClassFromString("NSURL")</SourceLine>
+   <SourceLine>Return NSURLClassRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSWorkspaceClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NSWorkspaceClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static NSWorkspaceClassRef As Ptr = NSClassFromString("NSWorkspace")</SourceLine>
+   <SourceLine>Return NSWorkspaceClassRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromPicture</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromPicture(aPicture As Picture) As NSImage</SourceLine>
+   <SourceLine>// Returns a NSImage using the passed Xojo picture object</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithCGImageSize Lib "Cocoa" Selector "initWithCGImage:size:" (classRef As Ptr, CGImageRef As Ptr, size As NSSize) As Ptr</SourceLine>
+   <SourceLine>Declare Sub CFRelease Lib "CoreFoundation" (CFTypeRef As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = aPicture.CopyOSHandle(Picture.HandleType.MacCGImage)</SourceLine>
+   <SourceLine>DIM size As NSSize  // this is a zero sized NSSize</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = initWithCGImageSize(alloc(NSImageClassRef), CGImageRef, size)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>CFRelease CGImageRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused aPicture</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>aPicture As Picture</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromFolderItem</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromFolderItem(aFolderItem As FolderItem) As NSImage</SourceLine>
+   <SourceLine>// Returns a NSImage for the given FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithContentsOfFile Lib "Cocoa" Selector "initWithContentsOfFile:" (classRef As Ptr, fileName As CFStringRef) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM imageRef As Ptr = initWithContentsOfFile(alloc(NSImageClassRef), aFolderItem.NativePath)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused aFolderItem</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>aFolderItem As FolderItem</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>InstanceRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>InstanceRef As Ptr</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mHandle As Ptr</ItemDeclaration>
+  <ItemDeclaration>InstanceRef As Ptr</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mInstanceRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mInstanceRef As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mInstanceRef As Ptr</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -6816,7 +6932,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Property InstanceRef As Ptr</SourceLine>
+   <SourceLine>InstanceRef As Ptr</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -6882,22 +6998,23 @@
    <EditorCount>3</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>Window1</EditorLocation>
+    <EditorLocation>Cocoa.CFRelease</EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>22886804</EditingPartID>
+    <EditingPartID>1685480238</EditingPartID>
    </Editor>
    <Editor>
     <EditorIndex>1</EditorIndex>
-    <EditorLocation>NSHost.HostNames</EditorLocation>
+    <EditorLocation>NSHost.mInstanceRef</EditorLocation>
     <EditorPath>NSHost.</EditorPath>
     <EditingPartID>1714854946</EditingPartID>
    </Editor>
    <Editor>
     <EditorIndex>2</EditorIndex>
-    <EditorLocation></EditorLocation>
-    <EditorPath>Cocoa.</EditorPath>
+    <EditorLocation>NSImage.FromFolderItem</EditorLocation>
+    <EditorPath>NSImage.</EditorPath>
+    <EditingPartID>83466077</EditingPartID>
    </Editor>
-   <SelectedTab>0</SelectedTab>
+   <SelectedTab>2</SelectedTab>
   </Editors>
  </StudioWindowState>
 </block>
