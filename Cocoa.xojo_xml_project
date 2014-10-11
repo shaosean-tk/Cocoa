@@ -19,7 +19,7 @@
  <DefaultLanguage>0</DefaultLanguage>
  <CurrentLanguage>0</CurrentLanguage>
  <DefaultEncoding>0</DefaultEncoding>
- <BuildFlags>18688</BuildFlags>
+ <BuildFlags>26880</BuildFlags>
  <UseBuildsFolder>1</UseBuildsFolder>
  <WebApp>0</WebApp>
  <Icon>
@@ -5890,7 +5890,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mWidth As Integer = 32</SourceLine>
+   <SourceLine>mWidth As Integer</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -5904,7 +5904,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mHeight As Integer = 32</SourceLine>
+   <SourceLine>mHeight As Integer</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -6000,6 +6000,16 @@
    <Visible>1</Visible>
    <PropertyGroup>Position</PropertyGroup>
    <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Height</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Width</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>Integer</ItemType>
   </ViewProperty>
  </ViewBehavior>
@@ -7079,26 +7089,14 @@
 <block type="UIState" ID="0">
  <StudioWindowState>
   <Editors>
-   <EditorCount>3</EditorCount>
+   <EditorCount>1</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>Cocoa.CFRelease</EditorLocation>
+    <EditorLocation>Window1.Controls.TextArea1</EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>1685480238</EditingPartID>
+    <EditingPartID>22886804</EditingPartID>
    </Editor>
-   <Editor>
-    <EditorIndex>1</EditorIndex>
-    <EditorLocation>NSHost.mInstanceRef</EditorLocation>
-    <EditorPath>NSHost.</EditorPath>
-    <EditingPartID>1714854946</EditingPartID>
-   </Editor>
-   <Editor>
-    <EditorIndex>2</EditorIndex>
-    <EditorLocation>NSImage.Get</EditorLocation>
-    <EditorPath>NSImage.</EditorPath>
-    <EditingPartID>83466077</EditingPartID>
-   </Editor>
-   <SelectedTab>2</SelectedTab>
+   <SelectedTab>0</SelectedTab>
   </Editors>
  </StudioWindowState>
 </block>
