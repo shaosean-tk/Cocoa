@@ -114,6 +114,7 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub URL(Assigns value As FolderItem)</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
    <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (objRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
    <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
    <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (obj As Ptr, aNSURL As Ptr)</SourceLine>
@@ -146,6 +147,7 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub URL(Assigns value As String)</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
    <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (NSURLClass As Ptr, aString As CFStringRef) As Ptr</SourceLine>
    <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
    <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (objRef As Ptr, aNSURL As Ptr)</SourceLine>
