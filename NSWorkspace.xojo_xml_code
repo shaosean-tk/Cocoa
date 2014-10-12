@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="696333263">
+ <ObjName>NSWorkspace</ObjName>
+ <ObjContainerID>1021742600</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>0</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function objc_allocateClassPair Lib "Cocoa" (superclass As Ptr, name As CString, extraBytes As Integer) As Ptr</SourceLine>
+   <SourceLine>Declare Function class_addMethod Lib "Cocoa" (aClass As Ptr, name As Ptr, imp As Ptr, types As CString) As Boolean</SourceLine>
+   <SourceLine>Declare Sub objc_registerClassPair Lib "Cocoa" (aClass As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (aClassName As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Function NSSelectorFromString Lib "Cocoa" (aSelector As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Function sharedWorkspace Lib "Cocoa" Selector "sharedWorkspace" (id As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function notificationCenter Lib "Cocoa" Selector "notificationCenter" (id As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Sub addObserver Lib "Cocoa" Selector "addObserver:selector:name:object:" (id As Ptr, notificationObserver As Ptr, notificationSelector As Ptr, notificationName As CFStringRef, notificationSender As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the workspace</SourceLine>
+   <SourceLine>if (NSWorkspace.Workspace = Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.Workspace = NSClassFromString("NSWorkspace")</SourceLine>
+   <SourceLine>NSWorkspace.SharedWorkspace = sharedWorkspace(NSWorkspace.Workspace)</SourceLine>
+   <SourceLine>NSWorkspace.NotificationCenter = notificationCenter(NSWorkspace.SharedWorkspace)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the notification observer</SourceLine>
+   <SourceLine>if (NSWorkspace.DelegateClass = Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.DelegateClass = objc_allocateClassPair(NSClassFromString("NSObject"), me.Identifier, 0)</SourceLine>
+   <SourceLine>objc_registerClassPair NSWorkspace.DelegateClass  // register the class</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// add the methods to the new class</SourceLine>
+   <SourceLine>if (not class_addMethod(NSWorkspace.DelegateClass, NSSelectorFromString("DispatchNotification:"), AddressOf NSWorkspace.DispatchNotification, "v@:@")) then Break</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>NSWorkspace.DelegateInstance = init(alloc(NSWorkspace.DelegateClass))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// add all the notifications</SourceLine>
+   <SourceLine>addObserver NSWorkspace.NotificationCenter, NSWorkspace.DelegateInstance, NSSelectorFromString("DispatchNotification:"), Nil, NSWorkspace.SharedWorkspace</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Create</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function Create() As NSWorkspace</SourceLine>
+   <SourceLine>DIM returnValue As NSWorkspace</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>if (NSWorkspace.DelegateClassRef = Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.DelegateClassRef = NEW NSWorkspace</SourceLine>
+   <SourceLine>returnValue = NSWorkspace.DelegateClassRef</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>NSWorkspace</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DispatchNotification</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub DispatchNotification(notification As Ptr)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (id As Ptr) As CFStringRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>select case name(notification)</SourceLine>
+   <SourceLine>case "NSWorkspaceWillLaunchApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceWillLaunchApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidLaunchApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidLaunchApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidTerminateApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidTerminateApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceSessionDidBecomeActiveNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceSessionDidBecomeActiveNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceSessionDidResignActiveNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceSessionDidResignActiveNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidHideApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidHideApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidUnhideApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidUnhideApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidActivateApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidActivateApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidDeactivateApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidDeactivateApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidRenameVolumeNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidRenameVolumeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidMountNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidMountNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceWillUnmountNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceWillUnmountNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidUnmountNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidUnmountNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidPerformFileOperationNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceDidPerformFileOperationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidChangeFileLabelsNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceDidChangeFileLabelsNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceActiveSpaceDidChangeNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceActiveSpaceDidChangeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidWakeNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceDidWakeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceWillPowerOffNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceWillPowerOffNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceWillSleepNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceWillSleepNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceScreensDidSleepNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceScreensDidSleepNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceScreensDidWakeNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceScreensDidWakeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceOtherNotification</SourceLine>
+   <SourceLine>end select</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>notification As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DispatchNotification</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Sub DispatchNotification(id As Ptr, sel As Ptr, notification As Ptr)</SourceLine>
+   <SourceLine>#pragma Unused id</SourceLine>
+   <SourceLine>#pragma Unused sel</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (notification &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.DelegateClassRef.DispatchNotification notification</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>id As Ptr, sel As Ptr, notification As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>IconForFileType</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function IconForFileType(fileType As String) As Ptr</SourceLine>
+   <SourceLine>// returns a NSImage for the file type passed</SourceLine>
+   <SourceLine>// DIM aNSImage As Ptr = Cocoa.IconForFileType("png")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function iconForFileType Lib "Cocoa" Selector "iconForFileType:" (SharedWorkspace As Ptr, fileType As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Return iconForFileType(SharedWorkspace, fileType)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused fileType</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>fileType As String</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Hook>
+  <ItemName>NSWorkspaceActiveSpaceDidChangeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidActivateApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidChangeFileLabelsNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidDeactivateApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidHideApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidLaunchApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidMountNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidPerformFileOperationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidRenameVolumeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidTerminateApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidUnhideApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidUnmountNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidWakeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceOtherNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceScreensDidSleepNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceScreensDidWakeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceSessionDidBecomeActiveNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceSessionDidResignActiveNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillLaunchApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillPowerOffNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillSleepNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillUnmountNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Property>
+  <ItemName>DelegateClass</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared DelegateClass As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DelegateClass As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DelegateClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared DelegateClassRef As NSWorkspace</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DelegateClassRef As NSWorkspace</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DelegateInstance</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared DelegateInstance As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DelegateInstance As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>NotificationCenter</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared NotificationCenter As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>NotificationCenter As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>SharedWorkspace</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared SharedWorkspace As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>SharedWorkspace As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Workspace</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Workspace As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Workspace As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>Identifier</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>Identifier</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>tk.shaosean.cocoa.observer</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+</block>
+</RBProject>

@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="983195041">
+ <ObjName>NSPathComponentCell</ObjName>
+ <ObjContainerID>1021742600</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Return me.mHandle</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>PictureFromNSImage</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function PictureFromNSImage(aNSImage As Ptr) As Picture</SourceLine>
+   <SourceLine>// Creates a Xojo picture object with the passed NSImage</SourceLine>
+   <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
+   <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (id As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
+   <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (id As Ptr) As NSSize</SourceLine>
+   <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// VARIABLES</SourceLine>
+   <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
+   <SourceLine>DIM nsImageSize As NSSize = Size(aNSImage)</SourceLine>
+   <SourceLine>DIM context As Ptr</SourceLine>
+   <SourceLine>DIM cgRectRef As CGRect</SourceLine>
+   <SourceLine>DIM cgPointRef As CGPoint</SourceLine>
+   <SourceLine>DIM cgSizeRef As CGSize</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// set the default size</SourceLine>
+   <SourceLine>proposedDestRect.Width = nsImageSize.Width</SourceLine>
+   <SourceLine>proposedDestRect.Height = nsImageSize.Height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the CGImage</SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(aNSImage, proposedDestRect, Nil, Nil)</SourceLine>
+   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>// create the xojo picture</SourceLine>
+   <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>cgPointRef.X = 0.0</SourceLine>
+   <SourceLine>cgPointRef.Y = 0.0</SourceLine>
+   <SourceLine>cgSizeRef.Width = returnValue.Width</SourceLine>
+   <SourceLine>cgSizeRef.Height = returnValue.Height</SourceLine>
+   <SourceLine>cgRectRef.Origin = cgPointRef</SourceLine>
+   <SourceLine>cgRectRef.RectSize = cgSizeRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>context = Ptr(returnValue.Graphics.Handle(Graphics.HandleTypeCGContextRef))</SourceLine>
+   <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aNSImage As Ptr</ItemParams>
+  <ItemResult>Picture</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(aNSPathControl As Ptr)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function clickedPathComponentCell Lib "Cocoa" Selector "clickedPathComponentCell" (aNSPathControl As Ptr) As Ptr</SourceLine>
+   <SourceLine>me.mHandle = clickedPathComponentCell(aNSPathControl)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aNSPathControl As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(Optional image As Picture, title As String, URL As String)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.mHandle = init(alloc(NSClassFromString("NSPathComponentCell")))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.Title = title</SourceLine>
+   <SourceLine>me.URL = "data://" + URL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (image &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>me.Image = image</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>Optional image As Picture, title As String, URL As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <ExternalMethod>
+  <ItemName>NSClassFromString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (className As CFStringRef) As Ptr</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>className As CFStringRef</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <Property>
+  <ItemName>Image</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Image As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Image As Picture</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithCGImageSize Lib "Cocoa" Selector "initWithCGImage:size:" (aNSImage As Ptr, CGImageRef As Ptr, size As NSSize) As Ptr</SourceLine>
+   <SourceLine>Declare Sub CFRelease Lib "Cocoa" (obj As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setImage Lib "Cocoa" Selector "setImage:" (obj As Ptr, aNSImage As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (value &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>DIM size As NSSize</SourceLine>
+   <SourceLine>size.Height = 0.0</SourceLine>
+   <SourceLine>size.Width = 0.0</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = value.CopyOSHandle(Picture.HandleType.MacCGImage)</SourceLine>
+   <SourceLine>DIM aNSImage As Ptr = initWithCGImageSize(alloc(NSClassFromString("NSImage")), CGImageRef, size)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>setImage me, aNSImage</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>CFRelease aNSImage</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function image Lib "Cocoa" Selector "image" (aNSPathComponentCell As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.PictureFromNSImage(image(me))</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>URL</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>URL As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>URL As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (objRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (objRef As Ptr, aNSURL As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), EncodeURLComponent(value))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>setURL me.mHandle, aNSURL</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>release aNSURL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function absoluteString Lib "Cocoa" Selector "absoluteString" (aNSURL As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Declare Function URL Lib "Cocoa" Selector "URL" (aNSPathComponentCell As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = URL(me)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return DecodeURLComponent(absoluteString(aNSURL))</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mHandle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mHandle As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mHandle As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Handle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Handle As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Handle As Ptr</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mHandle</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Title</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Title As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Title As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Sub setTitle Lib "Cocoa" Selector "setTitle:" (obj As Ptr, title As CFStringRef)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>setTitle me.mHandle, value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function title Lib "Cocoa" Selector "title" (obj As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return title(me)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Image</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>URL</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Title</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Origin As CGPoint</SourceLine>
+   <SourceLine>RectSize As CGSize</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGPoint</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGPoint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+</block>
+</RBProject>

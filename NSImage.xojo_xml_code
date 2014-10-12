@@ -1,0 +1,1244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="83466077">
+ <ObjName>NSImage</ObjName>
+ <ObjContainerID>1021742600</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <ExternalMethod>
+  <ItemName>NSClassFromString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (className As CFStringRef) As Ptr</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>className As CFStringRef</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As Picture</SourceLine>
+   <SourceLine>// Creates a Xojo picture object from the passed NSImage</SourceLine>
+   <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
+   <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (aNSImage As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
+   <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (aNSImage As Ptr) As NSSize</SourceLine>
+   <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// VARIABLES</SourceLine>
+   <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
+   <SourceLine>DIM nsImageSize As NSSize = Size(me)</SourceLine>
+   <SourceLine>DIM context As Ptr</SourceLine>
+   <SourceLine>DIM cgRectRef As CGRect</SourceLine>
+   <SourceLine>DIM cgPointRef As CGPoint</SourceLine>
+   <SourceLine>DIM cgSizeRef As CGSize</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// set the default size</SourceLine>
+   <SourceLine>proposedDestRect.Width = nsImageSize.Width</SourceLine>
+   <SourceLine>proposedDestRect.Height = nsImageSize.Height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the CGImage</SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(me, proposedDestRect, Nil, Nil)</SourceLine>
+   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>// create the xojo picture</SourceLine>
+   <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>cgPointRef.X = 0.0</SourceLine>
+   <SourceLine>cgPointRef.Y = 0.0</SourceLine>
+   <SourceLine>cgSizeRef.Width = returnValue.Width</SourceLine>
+   <SourceLine>cgSizeRef.Height = returnValue.Height</SourceLine>
+   <SourceLine>cgRectRef.Origin = cgPointRef</SourceLine>
+   <SourceLine>cgRectRef.RectSize = cgSizeRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>context = Ptr(returnValue.Graphics.Handle(Graphics.HandleTypeCGContextRef))</SourceLine>
+   <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Picture</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Destructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Destructor()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromFileType</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromFileType(fileType As String) As NSImage</SourceLine>
+   <SourceLine>// Returns a NSImage for the given file type</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function iconForFileType Lib "Cocoa" Selector "iconForFileType:" (SharedWorkspace As Ptr, fileType As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Function sharedWorkspace Lib "Cocoa" Selector "sharedWorkspace" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM theSharedWorkspace As Ptr = sharedWorkspace(NSWorkspaceClassRef)</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = iconForFileType(theSharedWorkspace, FileType)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused fileType</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>fileType As String</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromURL</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromURL(URL As String) As NSImage</SourceLine>
+   <SourceLine>// Returns a NSImage if URL is valid image, Nil otherwise</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithContentsOfURL Lib "Cocoa" Selector "initWithContentsOfURL:" (NSImageClassRef As Ptr, aNSURL As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (NSURLClassRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSURLClassRef), URL)</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = initWithContentsOfURL(alloc(NSImageClassRef), aNSURL)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>release aNSURL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused URL</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>URL As String</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>SetSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub SetSize(width As Integer, height As Integer)</SourceLine>
+   <SourceLine>// Sets the size of the NSImage when converting to a Xojo picture object</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Sub setSize Lib "Cocoa" Selector "setSize:" (aNSImage As Ptr, aNSSize As NSSize)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSSize As NSSize</SourceLine>
+   <SourceLine>aNSSize.Width = width</SourceLine>
+   <SourceLine>aNSSize.Height = height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>setSize me, aNSSize</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused width</SourceLine>
+   <SourceLine>#pragma Unused height</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>width As Integer, height As Integer</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ImageNamed</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function ImageNamed(name As String) As NSImage</SourceLine>
+   <SourceLine>// Returns the image object associated with the specified name.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = imageNamed(NSImageClassRef, name)</SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused name</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>name As String</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSImageClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NSImageClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static NSImageClassRef As Ptr = NSClassFromString("NSImage")</SourceLine>
+   <SourceLine>Return NSImageClassRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(instanceRef As Ptr)</SourceLine>
+   <SourceLine>// New instance from class method</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>me.mInstanceRef = instanceRef</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>instanceRef As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSURLClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NSURLClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static NSURLClassRef As Ptr = NSClassFromString("NSURL")</SourceLine>
+   <SourceLine>Return NSURLClassRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSWorkspaceClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NSWorkspaceClassRef() As Ptr</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static NSWorkspaceClassRef As Ptr = NSClassFromString("NSWorkspace")</SourceLine>
+   <SourceLine>Return NSWorkspaceClassRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromPicture</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromPicture(aPicture As Picture) As NSImage</SourceLine>
+   <SourceLine>// Returns a NSImage using the passed Xojo picture object</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithCGImageSize Lib "Cocoa" Selector "initWithCGImage:size:" (classRef As Ptr, CGImageRef As Ptr, size As NSSize) As Ptr</SourceLine>
+   <SourceLine>Declare Sub CFRelease Lib "CoreFoundation" (CFTypeRef As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = aPicture.CopyOSHandle(Picture.HandleType.MacCGImage)</SourceLine>
+   <SourceLine>DIM size As NSSize  // this is a zero sized NSSize</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = initWithCGImageSize(alloc(NSImageClassRef), CGImageRef, size)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>CFRelease CGImageRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused aPicture</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>aPicture As Picture</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromFolderItem</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromFolderItem(aFolderItem As FolderItem) As NSImage</SourceLine>
+   <SourceLine>// Returns a NSImage for the given FolderItem</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithContentsOfFile Lib "Cocoa" Selector "initWithContentsOfFile:" (classRef As Ptr, fileName As CFStringRef) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM imageRef As Ptr = initWithContentsOfFile(alloc(NSImageClassRef), aFolderItem.NativePath)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused aFolderItem</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>aFolderItem As FolderItem</ItemParams>
+  <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>InstanceRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>InstanceRef As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>InstanceRef As Ptr</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mInstanceRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mInstanceRef As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mInstanceRef As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mWidth</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mWidth As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mWidth As Integer = 32</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mHeight</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mHeight As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mHeight As Integer = 32</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Height</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Height As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Height As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>me.mHeight = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.SetSize me.Width, value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mHeight</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Width</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Width As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>me.mWidth = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.SetSize value, me.Height</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mWidth</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Height</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Width</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>NSImageNameStatusPartiallyAvailable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameStatusPartiallyAvailable</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSStatusPartiallyAvailable</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameActionTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameActionTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSActionTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameAddTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameAddTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSAddTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameAdvanced</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameAdvanced</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSAdvanced</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameApplicationIcon</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameApplicationIcon</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSApplicationIcon</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameBluetoothTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameBluetoothTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSBluetoothTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameBonjour</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameBonjour</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSBonjour</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameBookmarksTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameBookmarksTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSBookmarksTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameCaution</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameCaution</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSCaution</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameColorPanel</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameColorPanel</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSColorPanel</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameColumnViewTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameColumnViewTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSColumnViewTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameComputer</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameComputer</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSComputer</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameDotMac</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameDotMac</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSDotMac</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameEnterFullScreenTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameEnterFullScreenTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSEnterFullScreenTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameEveryone</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameEveryone</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSEveryone</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameExitFullScreenTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameExitFullScreenTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSExitFullScreenTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameFlowViewTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameFlowViewTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSFlowViewTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameFolder</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameFolder</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSFolder</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameFolderBurnable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameFolderBurnable</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSFolderBurnable</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameFolderSmart</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameFolderSmart</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSFolderSmart</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameFollowLinkFreestandingTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameFollowLinkFreestandingTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSFollowLinkFreestandingTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameFontPanel</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameFontPanel</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSFontPanel</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameGoLeftTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameGoLeftTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSGoLeftTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameGoRightTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameGoRightTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSGoRightTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameHomeTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameHomeTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSHomeTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameIChatTheaterTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameIChatTheaterTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSIChatTheaterTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameIconViewTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameIconViewTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSIconViewTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameInfo</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameInfo</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSInfo</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameInvalidDataFreestandingTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameInvalidDataFreestandingTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSInvalidDataFreestandingTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameLeftFacingTriangleTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameLeftFacingTriangleTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSLeftFacingTriangleTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameListViewTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameListViewTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSListViewTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameLockLockedTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameLockLockedTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSLockLockedTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameLockUnlockedTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameLockUnlockedTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSLockUnlockedTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameMenuMixedStateTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameMenuMixedStateTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSMenuMixedStateTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameMenuOnStateTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameMenuOnStateTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSMenuOnStateTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameMobileMe</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameMobileMe</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSMobileMe</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameMultipleDocuments</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameMultipleDocuments</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSMultipleDocuments</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameNetwork</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameNetwork</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSNetwork</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNamePathTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNamePathTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSPathTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNamePreferencesGeneral</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNamePreferencesGeneral</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSPreferencesGeneral</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameQuickLookTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameQuickLookTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSQuickLookTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameRefreshFreestandingTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameRefreshFreestandingTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSRefreshFreestandingTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameRefreshTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameRefreshTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSRefreshTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameRemoveTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameRemoveTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSRemoveTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameRevealFreestandingTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameRevealFreestandingTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSRevealFreestandingTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameRightFacingTriangleTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameRightFacingTriangleTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSRightFacingTriangleTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameShareTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameShareTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSShareTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameSlideshowTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameSlideshowTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSSlideshowTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameSmartBadgeTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameSmartBadgeTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSSmartBadgeTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameStatusAvailable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameStatusAvailable</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSStatusAvailable</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameStatusNone</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameStatusNone</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSStatusNone</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameStatusUnavailable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameStatusUnavailable</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSStatusUnavailable</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameStopProgressFreestandingTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameStopProgressFreestandingTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSStopProgressFreestandingTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameStopProgressTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameStopProgressTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSStopProgressTemplate</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameTrashEmpty</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameTrashEmpty</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSTrashEmpty</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameTrashFull</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameTrashFull</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSTrashFull</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameUser</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameUser</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSUser</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameUserAccounts</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameUserAccounts</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSUserAccounts</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameUserGroup</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameUserGroup</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSUserGroup</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSImageNameUserGuest</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSImageNameUserGuest</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>NSUserGuest</ItemDef>
+  <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGPoint</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGPoint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Origin As CGPoint</SourceLine>
+   <SourceLine>RectSize As CGSize</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+</block>
+</RBProject>
