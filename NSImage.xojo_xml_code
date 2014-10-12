@@ -37,15 +37,14 @@
    <SourceLine></SourceLine>
    <SourceLine>DIM returnValue As Picture</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>// DECLARES</SourceLine>
    <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (aNSImage As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
    <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
    <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
    <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (aNSImage As Ptr) As NSSize</SourceLine>
    <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>// VARIABLES</SourceLine>
    <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
    <SourceLine>DIM nsImageSize As NSSize = Size(me)</SourceLine>
    <SourceLine>DIM context As Ptr</SourceLine>
@@ -59,7 +58,7 @@
    <SourceLine></SourceLine>
    <SourceLine>// create the CGImage</SourceLine>
    <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(me, proposedDestRect, Nil, Nil)</SourceLine>
-   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>// create the xojo picture</SourceLine>
    <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
    <SourceLine></SourceLine>
@@ -72,8 +71,10 @@
    <SourceLine></SourceLine>
    <SourceLine>context = Ptr(returnValue.Graphics.Handle(Graphics.HandleTypeCGContextRef))</SourceLine>
    <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
-   <SourceLine>end if</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>returnValue = me.mImage</SourceLine>
    <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Return returnValue</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -92,7 +93,15 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
    <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>#elseif TargetLinux</SourceLine>
+   <SourceLine>Return me.mImage.CopyOSHandle(Picture.HandleType.LinuxGdkPixbuf)</SourceLine>
+   <SourceLine>#elseif TargetWin32</SourceLine>
+   <SourceLine>Return me.mImage.CopyOSHandle(Picture.HandleType.WindowsBMP)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -230,12 +239,13 @@
    <SourceLine></SourceLine>
    <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>DIM imageRef As Ptr = imageNamed(NSImageClassRef, name)</SourceLine>
-   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused name</SourceLine>
+   <SourceLine>' Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>' DIM imageRef As Ptr = imageNamed(NSImageClassRef, name)</SourceLine>
+   <SourceLine>' #else</SourceLine>
+   <SourceLine>DIM imageRef As Picture = ImageNamed_(name)</SourceLine>
    <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
    <SourceLine>end try</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
@@ -371,12 +381,12 @@
   <ItemResult>NSImage</ItemResult>
  </Method>
  <Method>
-  <ItemName>FromFolderItem</ItemName>
+  <ItemName>Open</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function FromFolderItem(aFolderItem As FolderItem) As NSImage</SourceLine>
+   <SourceLine> Shared Function Open(aFolderItem As FolderItem) As NSImage</SourceLine>
    <SourceLine>// Returns a NSImage for the given FolderItem</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>try</SourceLine>
@@ -399,6 +409,112 @@
   <IsShared>1</IsShared>
   <ItemParams>aFolderItem As FolderItem</ItemParams>
   <ItemResult>NSImage</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(image As Picture)</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>#if not TargetCocoa</SourceLine>
+   <SourceLine>me.mImage = image</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>image As Picture</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ImageNamed_</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function ImageNamed_(name As String) As Picture</SourceLine>
+   <SourceLine>// can't believe we have to do this, but here we go</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM encodedImage As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>select case name</SourceLine>
+   <SourceLine>case NSImageNameActionTemplate</SourceLine>
+   <SourceLine>case NSImageNameAddTemplate</SourceLine>
+   <SourceLine>case NSImageNameAdvanced</SourceLine>
+   <SourceLine>case NSImageNameApplicationIcon</SourceLine>
+   <SourceLine>case NSImageNameBluetoothTemplate</SourceLine>
+   <SourceLine>case NSImageNameBonjour</SourceLine>
+   <SourceLine>case NSImageNameBookmarksTemplate</SourceLine>
+   <SourceLine>case NSImageNameCaution</SourceLine>
+   <SourceLine>case NSImageNameColorPanel</SourceLine>
+   <SourceLine>case NSImageNameColumnViewTemplate</SourceLine>
+   <SourceLine>case NSImageNameComputer</SourceLine>
+   <SourceLine>case NSImageNameDotMac</SourceLine>
+   <SourceLine>case NSImageNameEnterFullScreenTemplate</SourceLine>
+   <SourceLine>case NSImageNameEveryone</SourceLine>
+   <SourceLine>case NSImageNameExitFullScreenTemplate</SourceLine>
+   <SourceLine>case NSImageNameFlowViewTemplate</SourceLine>
+   <SourceLine>case NSImageNameFolder</SourceLine>
+   <SourceLine>case NSImageNameFolderBurnable</SourceLine>
+   <SourceLine>case NSImageNameFolderSmart</SourceLine>
+   <SourceLine>case NSImageNameFollowLinkFreestandingTemplate</SourceLine>
+   <SourceLine>case NSImageNameFontPanel</SourceLine>
+   <SourceLine>case NSImageNameGoLeftTemplate</SourceLine>
+   <SourceLine>case NSImageNameGoRightTemplate</SourceLine>
+   <SourceLine>case NSImageNameHomeTemplate</SourceLine>
+   <SourceLine>case NSImageNameIChatTheaterTemplate</SourceLine>
+   <SourceLine>case NSImageNameIconViewTemplate</SourceLine>
+   <SourceLine>case NSImageNameInfo</SourceLine>
+   <SourceLine>case NSImageNameInvalidDataFreestandingTemplate</SourceLine>
+   <SourceLine>case NSImageNameLeftFacingTriangleTemplate</SourceLine>
+   <SourceLine>case NSImageNameListViewTemplate</SourceLine>
+   <SourceLine>case NSImageNameLockLockedTemplate</SourceLine>
+   <SourceLine>case NSImageNameLockUnlockedTemplate</SourceLine>
+   <SourceLine>case NSImageNameMenuMixedStateTemplate</SourceLine>
+   <SourceLine>case NSImageNameMenuOnStateTemplate</SourceLine>
+   <SourceLine>case NSImageNameMobileMe</SourceLine>
+   <SourceLine>case NSImageNameMultipleDocuments</SourceLine>
+   <SourceLine>case NSImageNameNetwork</SourceLine>
+   <SourceLine>case NSImageNamePathTemplate</SourceLine>
+   <SourceLine>case NSImageNamePreferencesGeneral</SourceLine>
+   <SourceLine>case NSImageNameQuickLookTemplate</SourceLine>
+   <SourceLine>case NSImageNameRefreshFreestandingTemplate</SourceLine>
+   <SourceLine>case NSImageNameRefreshTemplate</SourceLine>
+   <SourceLine>case NSImageNameRemoveTemplate</SourceLine>
+   <SourceLine>case NSImageNameRevealFreestandingTemplate</SourceLine>
+   <SourceLine>case NSImageNameRightFacingTriangleTemplate</SourceLine>
+   <SourceLine>case NSImageNameShareTemplate</SourceLine>
+   <SourceLine>encodedImage = ""</SourceLine>
+   <SourceLine>case NSImageNameSlideshowTemplate</SourceLine>
+   <SourceLine>case NSImageNameSmartBadgeTemplate</SourceLine>
+   <SourceLine>case NSImageNameStatusAvailable</SourceLine>
+   <SourceLine>case NSImageNameStatusNone</SourceLine>
+   <SourceLine>case NSImageNameStatusPartiallyAvailable</SourceLine>
+   <SourceLine>case NSImageNameStatusUnavailable</SourceLine>
+   <SourceLine>case NSImageNameStopProgressFreestandingTemplate</SourceLine>
+   <SourceLine>case NSImageNameStopProgressTemplate</SourceLine>
+   <SourceLine>case NSImageNameTrashEmpty</SourceLine>
+   <SourceLine>case NSImageNameTrashFull</SourceLine>
+   <SourceLine>case NSImageNameUser</SourceLine>
+   <SourceLine>case NSImageNameUserAccounts</SourceLine>
+   <SourceLine>case NSImageNameUserGroup</SourceLine>
+   <SourceLine>case NSImageNameUserGuest</SourceLine>
+   <SourceLine>end select</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return Picture.FromData(DecodeBase64(encodedImage))</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>name As String</ItemParams>
+  <ItemResult>Picture</ItemResult>
  </Method>
  <Property>
   <ItemName>InstanceRef</ItemName>
@@ -527,6 +643,20 @@
    <SourceLine>Return me.mWidth</SourceLine>
    <SourceLine>End Get</SourceLine>
   </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mImage</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mImage As Picture</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mImage As Picture</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
  </Property>
  <ViewBehavior>
   <ViewProperty>
@@ -1172,6 +1302,16 @@
   <ItemType>0</ItemType>
   <ItemDef>NSUserGuest</ItemDef>
   <ItemFlags>0</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>SSShareTemplate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>SSShareTemplate</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>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</ItemDef>
+  <ItemFlags>33</ItemFlags>
  </Constant>
  <Structure>
   <TextEncoding>134217984</TextEncoding>
