@@ -3425,787 +3425,34 @@
  <ObjName>Classes</ObjName>
  <ObjContainerID>0</ObjContainerID>
 </block>
-<block type="Module" ID="696333263">
- <ObjName>NSWorkspace</ObjName>
+<block type="Module" ID="1714854946">
+ <ObjName>NSHost</ObjName>
  <ObjContainerID>1021742600</ObjContainerID>
  <IsClass>1</IsClass>
- <ItemFlags>0</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
- <Method>
-  <ItemName>Constructor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor()</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>// DECLARES</SourceLine>
-   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function objc_allocateClassPair Lib "Cocoa" (superclass As Ptr, name As CString, extraBytes As Integer) As Ptr</SourceLine>
-   <SourceLine>Declare Function class_addMethod Lib "Cocoa" (aClass As Ptr, name As Ptr, imp As Ptr, types As CString) As Boolean</SourceLine>
-   <SourceLine>Declare Sub objc_registerClassPair Lib "Cocoa" (aClass As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (aClassName As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Declare Function NSSelectorFromString Lib "Cocoa" (aSelector As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Declare Function sharedWorkspace Lib "Cocoa" Selector "sharedWorkspace" (id As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function notificationCenter Lib "Cocoa" Selector "notificationCenter" (id As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Sub addObserver Lib "Cocoa" Selector "addObserver:selector:name:object:" (id As Ptr, notificationObserver As Ptr, notificationSelector As Ptr, notificationName As CFStringRef, notificationSender As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// create the workspace</SourceLine>
-   <SourceLine>if (NSWorkspace.Workspace = Nil) then</SourceLine>
-   <SourceLine>NSWorkspace.Workspace = NSClassFromString("NSWorkspace")</SourceLine>
-   <SourceLine>NSWorkspace.SharedWorkspace = sharedWorkspace(NSWorkspace.Workspace)</SourceLine>
-   <SourceLine>NSWorkspace.NotificationCenter = notificationCenter(NSWorkspace.SharedWorkspace)</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// create the notification observer</SourceLine>
-   <SourceLine>if (NSWorkspace.DelegateClass = Nil) then</SourceLine>
-   <SourceLine>NSWorkspace.DelegateClass = objc_allocateClassPair(NSClassFromString("NSObject"), me.Identifier, 0)</SourceLine>
-   <SourceLine>objc_registerClassPair NSWorkspace.DelegateClass  // register the class</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// add the methods to the new class</SourceLine>
-   <SourceLine>if (not class_addMethod(NSWorkspace.DelegateClass, NSSelectorFromString("DispatchNotification:"), AddressOf NSWorkspace.DispatchNotification, "v@:@")) then Break</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>NSWorkspace.DelegateInstance = init(alloc(NSWorkspace.DelegateClass))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// add all the notifications</SourceLine>
-   <SourceLine>addObserver NSWorkspace.NotificationCenter, NSWorkspace.DelegateInstance, NSSelectorFromString("DispatchNotification:"), Nil, NSWorkspace.SharedWorkspace</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>Create</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function Create() As NSWorkspace</SourceLine>
-   <SourceLine>DIM returnValue As NSWorkspace</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>if (NSWorkspace.DelegateClassRef = Nil) then</SourceLine>
-   <SourceLine>NSWorkspace.DelegateClassRef = NEW NSWorkspace</SourceLine>
-   <SourceLine>returnValue = NSWorkspace.DelegateClassRef</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return returnValue</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>NSWorkspace</ItemResult>
- </Method>
- <Method>
-  <ItemName>DispatchNotification</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub DispatchNotification(notification As Ptr)</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (id As Ptr) As CFStringRef</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>select case name(notification)</SourceLine>
-   <SourceLine>case "NSWorkspaceWillLaunchApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceWillLaunchApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidLaunchApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidLaunchApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidTerminateApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidTerminateApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceSessionDidBecomeActiveNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceSessionDidBecomeActiveNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceSessionDidResignActiveNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceSessionDidResignActiveNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidHideApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidHideApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidUnhideApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidUnhideApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidActivateApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidActivateApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidDeactivateApplicationNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidDeactivateApplicationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidRenameVolumeNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidRenameVolumeNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidMountNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidMountNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceWillUnmountNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceWillUnmountNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidUnmountNotification"</SourceLine>
-   <SourceLine>RaiseEvent NSWorkspaceDidUnmountNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidPerformFileOperationNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceDidPerformFileOperationNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidChangeFileLabelsNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceDidChangeFileLabelsNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceActiveSpaceDidChangeNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceActiveSpaceDidChangeNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceDidWakeNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceDidWakeNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceWillPowerOffNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceWillPowerOffNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceWillSleepNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceWillSleepNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceScreensDidSleepNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceScreensDidSleepNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>case "NSWorkspaceScreensDidWakeNotification"</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceScreensDidWakeNotification</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>else</SourceLine>
-   <SourceLine>RaiseEvent  NSWorkspaceOtherNotification</SourceLine>
-   <SourceLine>end select</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>notification As Ptr</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>DispatchNotification</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Sub DispatchNotification(id As Ptr, sel As Ptr, notification As Ptr)</SourceLine>
-   <SourceLine>#pragma Unused id</SourceLine>
-   <SourceLine>#pragma Unused sel</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (notification &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>NSWorkspace.DelegateClassRef.DispatchNotification notification</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams>id As Ptr, sel As Ptr, notification As Ptr</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>IconForFileType</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function IconForFileType(fileType As String) As Ptr</SourceLine>
-   <SourceLine>// returns a NSImage for the file type passed</SourceLine>
-   <SourceLine>// DIM aNSImage As Ptr = Cocoa.IconForFileType("png")</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function iconForFileType Lib "Cocoa" Selector "iconForFileType:" (SharedWorkspace As Ptr, fileType As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Return iconForFileType(SharedWorkspace, fileType)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused fileType</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams>fileType As String</ItemParams>
-  <ItemResult>Ptr</ItemResult>
- </Method>
- <Hook>
-  <ItemName>NSWorkspaceActiveSpaceDidChangeNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidActivateApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidChangeFileLabelsNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidDeactivateApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidHideApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidLaunchApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidMountNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidPerformFileOperationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidRenameVolumeNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidTerminateApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidUnhideApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidUnmountNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceDidWakeNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceOtherNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceScreensDidSleepNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceScreensDidWakeNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceSessionDidBecomeActiveNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceSessionDidResignActiveNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceWillLaunchApplicationNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceWillPowerOffNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceWillSleepNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>NSWorkspaceWillUnmountNotification</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Property>
-  <ItemName>DelegateClass</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared DelegateClass As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>DelegateClass As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>DelegateClassRef</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared DelegateClassRef As NSWorkspace</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>DelegateClassRef As NSWorkspace</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>DelegateInstance</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared DelegateInstance As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>DelegateInstance As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>NotificationCenter</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared NotificationCenter As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>NotificationCenter As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>SharedWorkspace</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared SharedWorkspace As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>SharedWorkspace As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>Workspace</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Workspace As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Workspace As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <PropertyValue>-2147483648</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
- </ViewBehavior>
- <Constant>
-  <ItemName>Identifier</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>Identifier</ItemName>
-  <ItemType>0</ItemType>
-  <ItemDef>tk.shaosean.cocoa.observer</ItemDef>
-  <ItemFlags>33</ItemFlags>
- </Constant>
-</block>
-<block type="Module" ID="1499674929">
- <ObjName>NSPathControl</ObjName>
- <ObjContainerID>1021742600</ObjContainerID>
- <IsClass>1</IsClass>
- <Superclass>Canvas</Superclass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
- <HookInstance>
-  <ItemName>Open</ItemName>
+ <Method>
+  <ItemName>ClassRef</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Open()</SourceLine>
+   <SourceLine>Shared Function ClassRef() As Ptr</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>// DECLARES</SourceLine>
-   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function initWithFrame Lib "Cocoa" Selector "initWithFrame:" (obj As Ptr, frameRect As NSRect) As Ptr</SourceLine>
-   <SourceLine>Declare Sub addSubview Lib "Cocoa" Selector "addSubview:" (obj As Ptr, aView As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setAction Lib "Cocoa" Selector "setAction:" (obj As Ptr, aSelector As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setAutoresizingMask Lib "Cocoa" Selector "setAutoresizingMask:" (obj As Ptr, mask As Integer)</SourceLine>
-   <SourceLine>Declare Sub setDoubleAction Lib "Cocoa" Selector "setDoubleAction:" (obj As Ptr, aSelector As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setTarget Lib "Cocoa" Selector "setTarget:" (obj As Ptr, anObject As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>//-----</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>me.mSubView = initWithFrame(alloc(NSClassFromString("NSPathControl")), me.Frame)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (me.mSubView &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>// attach the NSPathControl to the canvas, the resizing will be handled by the canvas</SourceLine>
-   <SourceLine>addSubview Ptr(me.Handle), me.mSubView</SourceLine>
-   <SourceLine>setAutoResizingMask me.mSubView, (NSViewWidthSizable OR NSViewHeightSizable)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>me.mInstance = init(alloc(SSPathControlClass))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>setAction me.mSubView, NSSelectorFromString("action:")</SourceLine>
-   <SourceLine>setDoubleAction me.mSubView, NSSelectorFromString("doubleClick:")</SourceLine>
-   <SourceLine>setTarget me.mSubView, me.mInstance</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>NSPathControls.Append me</SourceLine>
-   <SourceLine>end if</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>static classRef As Ptr = NSClassFromString("NSHost")</SourceLine>
+   <SourceLine>Return classRef</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>#endif</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>RaiseEvent Open</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
- </HookInstance>
- <HookInstance>
-  <ItemName>DoubleClick</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub DoubleClick(X As Integer, Y As Integer)</SourceLine>
-   <SourceLine>#pragma Unused X</SourceLine>
-   <SourceLine>#pragma Unused Y</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// moo</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
- </HookInstance>
- <Method>
-  <ItemName>Action</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Action()</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>RaiseEvent Action NEW NSPathComponentCell(me)</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>ActionHandler</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Sub ActionHandler(id As Ptr, sel As Ptr, sender As Ptr)</SourceLine>
-   <SourceLine>if (UBound(NSPathControls) &gt; -1) then</SourceLine>
-   <SourceLine>for i as Integer = 0 to UBound(NSPathControls)</SourceLine>
-   <SourceLine>if (NSPathControls(i).mInstance = id) then</SourceLine>
-   <SourceLine>NSPathControls(i).Action</SourceLine>
-   <SourceLine>exit for i</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams>id As Ptr, sel As Ptr, sender As Ptr</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>URL</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub URL(Assigns value As FolderItem)</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (objRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (obj As Ptr, aNSURL As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), value.URLPath)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>setURL me, aNSURL</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>release aNSURL</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>Assigns value As FolderItem</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>URL</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub URL(Assigns value As String)</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (NSURLClass As Ptr, aString As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (objRef As Ptr, aNSURL As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), value)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>setURL me.mSubView, aNSURL</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>release aNSURL</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>Assigns value As String</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>Init</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Sub Init()</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>if (SSPathControlClass = Nil) then</SourceLine>
-   <SourceLine>// create our subclass</SourceLine>
-   <SourceLine>SSPathControlClass = objc_allocateClassPair(NSClassFromString("NSObject"), "SSPathControl", 0)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// add methods to the subclass</SourceLine>
-   <SourceLine>if (not class_addMethod(SSPathControlClass, NSSelectorFromString("action:"), AddressOf ActionHandler, "v@:@")) then Break</SourceLine>
-   <SourceLine>if (not class_addMethod(SSPathControlClass, NSSelectorFromString("doubleClick:"), AddressOf DoubleActionHandler, "v@:@")) then Break</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// register the new class with the runtime</SourceLine>
-   <SourceLine>objc_registerClassPair SSPathControlClass</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>DoubleActionHandler</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Sub DoubleActionHandler(id As Ptr, sel As Ptr, sender As Ptr)</SourceLine>
-   <SourceLine>if (UBound(NSPathControls) &gt; -1) then</SourceLine>
-   <SourceLine>for i as Integer = 0 to UBound(NSPathControls)</SourceLine>
-   <SourceLine>if (NSPathControls(i).mInstance = id) then</SourceLine>
-   <SourceLine>NSPathControls(i).DoubleAction</SourceLine>
-   <SourceLine>exit for i</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams>id As Ptr, sel As Ptr, sender As Ptr</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>Operator_Convert</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
-   <SourceLine>Return me.mSubView</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
   <ItemParams></ItemParams>
   <ItemResult>Ptr</ItemResult>
- </Method>
- <Method>
-  <ItemName>DoubleAction</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub DoubleAction()</SourceLine>
-   <SourceLine>RaiseEvent DoubleClick NEW NSPathComponentCell(me)</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
  </Method>
  <ExternalMethod>
   <ItemName>NSClassFromString</ItemName>
@@ -4224,134 +3471,56 @@
   <LibraryName>Cocoa</LibraryName>
   <SoftLink>0</SoftLink>
  </ExternalMethod>
- <ExternalMethod>
-  <ItemName>NSSelectorFromString</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Declare Function NSSelectorFromString Lib "Cocoa" (aSelector As CFStringRef) As Ptr</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>aSelector As CFStringRef</ItemParams>
-  <ItemResult>Ptr</ItemResult>
-  <LibraryName>Cocoa</LibraryName>
-  <SoftLink>0</SoftLink>
- </ExternalMethod>
- <ExternalMethod>
-  <ItemName>objc_allocateClassPair</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Declare Function objc_allocateClassPair Lib "Cocoa" (superclass As Ptr, name As CString, extraBytes As Integer) As Ptr</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>superclass As Ptr, name As CString, extraBytes As Integer</ItemParams>
-  <ItemResult>Ptr</ItemResult>
-  <LibraryName>Cocoa</LibraryName>
-  <SoftLink>0</SoftLink>
- </ExternalMethod>
- <ExternalMethod>
-  <ItemName>class_addMethod</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Declare Function class_addMethod Lib "Cocoa" (classRef As Ptr, name As Ptr, imp As Ptr, types As CString) As Boolean</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>classRef As Ptr, name As Ptr, imp As Ptr, types As CString</ItemParams>
-  <ItemResult>Boolean</ItemResult>
-  <LibraryName>Cocoa</LibraryName>
-  <SoftLink>0</SoftLink>
- </ExternalMethod>
- <ExternalMethod>
-  <ItemName>objc_registerClassPair</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Declare Sub objc_registerClassPair Lib "Cocoa" (classRef As Ptr)</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>classRef As Ptr</ItemParams>
-  <ItemResult></ItemResult>
-  <LibraryName>Cocoa</LibraryName>
-  <SoftLink>0</SoftLink>
- </ExternalMethod>
  <Method>
-  <ItemName>PictureFromNSImage</ItemName>
+  <ItemName>CurrentHost</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function PictureFromNSImage(aNSImage As Ptr) As Picture</SourceLine>
-   <SourceLine>// Creates a Xojo picture object with the passed NSImage</SourceLine>
-   <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
-   <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine> Shared Function CurrentHost() As NSHost</SourceLine>
+   <SourceLine>// Returns a NSHost object representing the host the process is running on.</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>// DECLARES</SourceLine>
-   <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (id As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
-   <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
-   <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
-   <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (id As Ptr) As NSSize</SourceLine>
-   <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// VARIABLES</SourceLine>
-   <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
-   <SourceLine>DIM nsImageSize As NSSize = Size(aNSImage)</SourceLine>
-   <SourceLine>DIM context As Ptr</SourceLine>
-   <SourceLine>DIM cgRectRef As CGRect</SourceLine>
-   <SourceLine>DIM cgPointRef As CGPoint</SourceLine>
-   <SourceLine>DIM cgSizeRef As CGSize</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// set the default size</SourceLine>
-   <SourceLine>proposedDestRect.Width = nsImageSize.Width</SourceLine>
-   <SourceLine>proposedDestRect.Height = nsImageSize.Height</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// create the CGImage</SourceLine>
-   <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(aNSImage, proposedDestRect, Nil, Nil)</SourceLine>
-   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>// create the xojo picture</SourceLine>
-   <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>cgPointRef.X = 0.0</SourceLine>
-   <SourceLine>cgPointRef.Y = 0.0</SourceLine>
-   <SourceLine>cgSizeRef.Width = returnValue.Width</SourceLine>
-   <SourceLine>cgSizeRef.Height = returnValue.Height</SourceLine>
-   <SourceLine>cgRectRef.Origin = cgPointRef</SourceLine>
-   <SourceLine>cgRectRef.RectSize = cgSizeRef</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>context = Ptr(returnValue.Graphics.Handle(returnValue.Graphics.HandleTypeCGContextRef))</SourceLine>
-   <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
-   <SourceLine>end if</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function currentHost Lib "Cocoa" Selector "currentHost" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Static currentHost As NSHost = NEW NSHost(currentHost(NSHost.ClassRef))</SourceLine>
+   <SourceLine>Return currentHost</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>#endif</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return returnValue</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>aNSImage As Ptr</ItemParams>
-  <ItemResult>Picture</ItemResult>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>NSHost</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HostWithAddress</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function HostWithAddress(address As String) As NSHost</SourceLine>
+   <SourceLine>// Returns a NSHost with the Internet address &lt;address&gt;.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function hostWithAddress Lib "Cocoa" Selector "hostWithAddress:" (classRef As Ptr, address As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Return NEW NSHost(hostWithAddress(NSHost.ClassRef, address))</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused address</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>address As String</ItemParams>
+  <ItemResult>NSHost</ItemResult>
  </Method>
  <Method>
   <ItemName>Constructor</ItemName>
@@ -4359,646 +3528,145 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor()</SourceLine>
-   <SourceLine>NSPathControl.Init</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Calling the overridden superclass constructor.</SourceLine>
-   <SourceLine>Super.Constructor</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Sub Constructor(anInstanceRef As Ptr)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>me.mInstanceRef = anInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>4096</ItemFlags>
+  <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
+  <ItemParams>anInstanceRef As Ptr</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
-  <ItemName>SetPathComponentCells</ItemName>
+  <ItemName>HostWithName</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub SetPathComponentCells(cells() As NSPathComponentCell)</SourceLine>
+   <SourceLine> Shared Function HostWithName(name As String) As NSHost</SourceLine>
+   <SourceLine>// Returns a host with a specific name.</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function initWithObjectsCount Lib "Cocoa" Selector "initWithObjects:count:" (aNSArray As Ptr, objects As Ptr, count As UInt32) As Ptr</SourceLine>
-   <SourceLine>Declare Sub setPathComponentCells Lib "Cocoa" Selector "setPathComponentCells:" (aNSPathControl As Ptr, aNSArray As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM count As UInt32 = UBound(cells) + 1</SourceLine>
-   <SourceLine>DIM aMemoryBlock As NEW MemoryBlock(me.SizeOfPointer * count)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>for i as Integer = 0 to UBound(cells)</SourceLine>
-   <SourceLine>aMemoryBlock.UInt32Value(i * me.SizeOfPointer) = UInt32(cells(i).Handle)</SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aNSArray As Ptr = initWithObjectsCount(alloc(NSClassFromString("NSArray")), aMemoryBlock, count)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>setPathComponentCells me, aNSArray</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function hostWithName Lib "Cocoa" Selector "hostWithName:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Return NEW NSHost(hostWithName(NSHost.ClassRef, name))</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused name</SourceLine>
    <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>name As String</ItemParams>
+  <ItemResult>NSHost</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Address</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Address() As String</SourceLine>
+   <SourceLine>// Returns one of the network addresses of the receiver.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function address Lib "Cocoa" Selector "address" (aNSHost As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return address(me.mInstanceRef)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>cells() As NSPathComponentCell</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Hook>
-  <ItemName>Open</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
   <ItemParams></ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>DoubleClick</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams>cell As NSPathComponentCell</ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Hook>
-  <ItemName>Action</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams>cell As NSPathComponentCell</ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Property>
-  <ItemName>SSPathControlClass</ItemName>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Addresses</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared SSPathControlClass As Ptr</SourceLine>
+   <SourceLine>Function Addresses() As String()</SourceLine>
+   <SourceLine>// Returns all the network addresses of the receiver.</SourceLine>
+   <SourceLine>// Note: this is blocking and your application will lock up</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function addresses Lib "Cocoa" Selector "addresses" (aNSHost As Ptr) As Ptr  // NSArray</SourceLine>
+   <SourceLine>DIM addressesArray As Ptr = addresses(me.mInstanceRef)</SourceLine>
+   <SourceLine>Return NSArrayToXojoArray(addressesArray)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>SSPathControlClass As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HostName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function HostName() As String</SourceLine>
+   <SourceLine>// Returns one of the hostnames of the receiver.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (aNSHost As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return name(me.mInstanceRef)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>LocalizedName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function LocalizedName() As String</SourceLine>
+   <SourceLine>// Returns the name used as by default when publishing NSNetServices.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function localizedName Lib "Cocoa" Selector "localizedName" (currentHost As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return localizedName(CurrentHost)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
   <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>mSubView</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mSubView As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mSubView As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>NSPathControls()</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared NSPathControls() As NSPathControl</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>NSPathControls() As NSPathControl</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
- </Property>
- <Property>
-  <ItemName>Frame</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Frame As NSRect</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Frame As NSRect</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>DIM value As NSRect</SourceLine>
-   <SourceLine>value.X = 0.0</SourceLine>
-   <SourceLine>value.Y = 0.0</SourceLine>
-   <SourceLine>value.Width = me.Width</SourceLine>
-   <SourceLine>value.Height = me.Height</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return value</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>FrameRect</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>FrameRect As REALbasic.Rect</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>FrameRect As REALbasic.Rect</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>DIM value As NEW REALbasic.Rect</SourceLine>
-   <SourceLine>value.Left = me.Frame.X</SourceLine>
-   <SourceLine>value.Top = me.Frame.Y</SourceLine>
-   <SourceLine>value.Width = me.Frame.Width</SourceLine>
-   <SourceLine>value.Height = me.Frame.Height</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return value</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>mInstance</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mInstance As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mInstance As Ptr</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>FocusRingType</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>FocusRingType As NSFocusRingType</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>FocusRingType As NSFocusRingType</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function cell Lib "Cocoa" Selector "cell" (obj As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Sub setFocusRingType Lib "Cocoa" Selector "setFocusRingType:" (obj As Ptr, value As NSFocusRingType)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aCell As Ptr = cell(me)</SourceLine>
-   <SourceLine>setFocusRingType aCell, value</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>PathStyle</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>PathStyle As NSPathStyle</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>PathStyle As NSPathStyle</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function cell Lib "Cocoa" Selector "cell" (obj As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Sub setPathStyle Lib "Cocoa" Selector "setPathStyle:" (obj As Ptr, value As NSPathStyle)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aCell As Ptr = cell(me)</SourceLine>
-   <SourceLine>setPathStyle aCell, value</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>BackgroundColor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>BackgroundColor As Color</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>BackgroundColor As Color</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>DIM value As Color = &amp;c00000000</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (me.mSubView &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>Declare Function backgroundColor Lib "Cocoa" Selector "backgroundColor" (obj As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function colorUsingColorSpaceName Lib "Cocoa" Selector "colorUsingColorSpaceName:" (obj As Ptr, colorSpace As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Declare Sub getRedGreenBlueAlpha Lib "Cocoa" Selector "getRed:green:blue:alpha:" (obj As Ptr, ByRef red As Single, ByRef green As Single, ByRef blue As Single, ByRef alpha As Single)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM NSColor As Ptr = backgroundColor(me)</SourceLine>
-   <SourceLine>NSColor = colorUsingColorSpaceName(NSColor, "NSCalibratedRGBColorSpace")</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM red As Single</SourceLine>
-   <SourceLine>DIM green As Single</SourceLine>
-   <SourceLine>DIM blue As Single</SourceLine>
-   <SourceLine>DIM alpha As Single</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>getRedGreenBlueAlpha NSColor, red, green, blue, alpha</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>red = 255.0 * red</SourceLine>
-   <SourceLine>green = 255.0 * green</SourceLine>
-   <SourceLine>blue = 255.0 * blue</SourceLine>
-   <SourceLine>alpha = 255.0 - (alpha * 255.0)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>value = RGB(red, green, blue, alpha)</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>AcceptFocus</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>AcceptTabs</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>AutoDeactivate</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Backdrop</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <ItemType>Picture</ItemType>
-   <EditorType>Picture</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>BackgroundColor</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>&amp;c000000</PropertyValue>
-   <ItemType>Color</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>DoubleBuffer</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Enabled</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>EraseBackground</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Height</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>100</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>HelpTag</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>InitialParent</ObjName>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockBottom</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockLeft</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockRight</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockTop</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TabIndex</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TabPanelIndex</ObjName>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TabStop</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Transparent</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-   <EditorType>Boolean</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>UseFocusRing</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Visible</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Width</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>100</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
- </ViewBehavior>
- <Constant>
-  <ItemName>NSViewHeightSizable</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSViewHeightSizable</ItemName>
-  <ItemType>2</ItemType>
-  <ItemDef>16</ItemDef>
-  <ItemFlags>33</ItemFlags>
- </Constant>
- <Constant>
-  <ItemName>NSViewMinYMargin</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSViewMinYMargin</ItemName>
-  <ItemType>2</ItemType>
-  <ItemDef>8</ItemDef>
-  <ItemFlags>33</ItemFlags>
- </Constant>
- <Constant>
-  <ItemName>NSViewWidthSizable</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSViewWidthSizable</ItemName>
-  <ItemType>2</ItemType>
-  <ItemDef>2</ItemDef>
-  <ItemFlags>33</ItemFlags>
- </Constant>
- <Constant>
-  <ItemName>SizeOfPointer</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>SizeOfPointer</ItemName>
-  <ItemType>2</ItemType>
-  <ItemDef>4</ItemDef>
-  <ItemFlags>33</ItemFlags>
- </Constant>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSRect</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>NSRect</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>X As Single</SourceLine>
-   <SourceLine>Y As Single</SourceLine>
-   <SourceLine>Width As Single</SourceLine>
-   <SourceLine>Height As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSSize</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>NSSize</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Width As Single</SourceLine>
-   <SourceLine>Height As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>CGPoint</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>CGPoint</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>X As Single</SourceLine>
-   <SourceLine>Y As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>CGRect</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>CGRect</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Origin As CGPoint</SourceLine>
-   <SourceLine>RectSize As CGSize</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>CGSize</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>CGSize</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Width As Single</SourceLine>
-   <SourceLine>Height As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Enumeration>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSFocusRingType</ItemName>
-  <ItemFlags>0</ItemFlags>
-  <ItemName>NSFocusRingType</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>NSFocusRingTypeDefault = 0</SourceLine>
-   <SourceLine>NSFocusRingTypeNone = 1</SourceLine>
-   <SourceLine>NSFocusRingTypeExterior = 2</SourceLine>
-   <SourceLine>Default = 0</SourceLine>
-   <SourceLine>None = 1</SourceLine>
-   <SourceLine>Exterior = 2</SourceLine>
-  </ItemSource>
- </Enumeration>
- <Enumeration>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSPathStyle</ItemName>
-  <ItemFlags>0</ItemFlags>
-  <ItemType>Integer</ItemType>
-  <ItemName>NSPathStyle</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>NSPathStyleStandard = 0</SourceLine>
-   <SourceLine>NSPathStyleNavigationBar = 1</SourceLine>
-   <SourceLine>NSPathStylePopUp = 2</SourceLine>
-   <SourceLine>Standard = 0</SourceLine>
-   <SourceLine>NavigationBar = 1</SourceLine>
-   <SourceLine>PopUp = 2</SourceLine>
-  </ItemSource>
- </Enumeration>
-</block>
-<block type="Module" ID="983195041">
- <ObjName>NSPathComponentCell</ObjName>
- <ObjContainerID>1021742600</ObjContainerID>
- <IsClass>1</IsClass>
- <ItemFlags>1</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
  <Method>
   <ItemName>Operator_Convert</ItemName>
   <Compatibility></Compatibility>
@@ -5007,7 +3675,9 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Return me.mHandle</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
@@ -5019,256 +3689,92 @@
   <ItemResult>Ptr</ItemResult>
  </Method>
  <Method>
-  <ItemName>PictureFromNSImage</ItemName>
+  <ItemName>HostNames</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function PictureFromNSImage(aNSImage As Ptr) As Picture</SourceLine>
-   <SourceLine>// Creates a Xojo picture object with the passed NSImage</SourceLine>
-   <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
-   <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine>Function HostNames() As String()</SourceLine>
+   <SourceLine>// Returns all the hostnames of the receiver.</SourceLine>
+   <SourceLine>// Note: this is blocking and your application will lock up</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>// DECLARES</SourceLine>
-   <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (id As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
-   <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
-   <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
-   <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (id As Ptr) As NSSize</SourceLine>
-   <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Declare Function names Lib "Cocoa" Selector "names" (aNSHost As Ptr) As Ptr  // NSArray</SourceLine>
+   <SourceLine>DIM namesArray As Ptr = names(me.mInstanceRef)</SourceLine>
+   <SourceLine>Return NSArrayToXojoArray(namesArray)</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>// VARIABLES</SourceLine>
-   <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
-   <SourceLine>DIM nsImageSize As NSSize = Size(aNSImage)</SourceLine>
-   <SourceLine>DIM context As Ptr</SourceLine>
-   <SourceLine>DIM cgRectRef As CGRect</SourceLine>
-   <SourceLine>DIM cgPointRef As CGPoint</SourceLine>
-   <SourceLine>DIM cgSizeRef As CGSize</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// set the default size</SourceLine>
-   <SourceLine>proposedDestRect.Width = nsImageSize.Width</SourceLine>
-   <SourceLine>proposedDestRect.Height = nsImageSize.Height</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// create the CGImage</SourceLine>
-   <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(aNSImage, proposedDestRect, Nil, Nil)</SourceLine>
-   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>// create the xojo picture</SourceLine>
-   <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>cgPointRef.X = 0.0</SourceLine>
-   <SourceLine>cgPointRef.Y = 0.0</SourceLine>
-   <SourceLine>cgSizeRef.Width = returnValue.Width</SourceLine>
-   <SourceLine>cgSizeRef.Height = returnValue.Height</SourceLine>
-   <SourceLine>cgRectRef.Origin = cgPointRef</SourceLine>
-   <SourceLine>cgRectRef.RectSize = cgSizeRef</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>context = Ptr(returnValue.Graphics.Handle(Graphics.HandleTypeCGContextRef))</SourceLine>
-   <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
-   <SourceLine>end if</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused aNSHost</SourceLine>
    <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NSArrayToXojoArray</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function NSArrayToXojoArray(aNSArray As Ptr) As String()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function count Lib "Cocoa" Selector "count" (aNSArray As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function objectAtIndex Lib "Cocoa" Selector "objectAtIndex:" (aNSArray As Ptr, index As Integer) As CFStringRef  // NSObject</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM count As Integer = count(aNSArray)</SourceLine>
+   <SourceLine>DIM returnValue(0) As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (count &gt; 0) then</SourceLine>
+   <SourceLine>REDIM returnValue(count - 1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i as Integer = 0 to (count - 1)</SourceLine>
+   <SourceLine>returnValue.Append objectAtIndex(aNSArray, i)</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>#endif</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>aNSImage As Ptr</ItemParams>
-  <ItemResult>Picture</ItemResult>
+  <ItemParams>aNSArray As Ptr</ItemParams>
+  <ItemResult>String()</ItemResult>
  </Method>
- <Method>
-  <ItemName>Constructor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor(aNSPathControl As Ptr)</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function clickedPathComponentCell Lib "Cocoa" Selector "clickedPathComponentCell" (aNSPathControl As Ptr) As Ptr</SourceLine>
-   <SourceLine>me.mHandle = clickedPathComponentCell(aNSPathControl)</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>aNSPathControl As Ptr</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>Constructor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor(Optional image As Picture, title As String, URL As String)</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>me.mHandle = init(alloc(NSClassFromString("NSPathComponentCell")))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>me.Title = title</SourceLine>
-   <SourceLine>me.URL = "data://" + URL</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (image &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>me.Image = image</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>Optional image As Picture, title As String, URL As String</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <ExternalMethod>
-  <ItemName>NSClassFromString</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (className As CFStringRef) As Ptr</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>className As CFStringRef</ItemParams>
-  <ItemResult>Ptr</ItemResult>
-  <LibraryName>Cocoa</LibraryName>
-  <SoftLink>0</SoftLink>
- </ExternalMethod>
  <Property>
-  <ItemName>Image</ItemName>
+  <ItemName>mInstanceRef</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Image As Picture</SourceLine>
+   <SourceLine>mInstanceRef As Ptr</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Image As Picture</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Declare Function initWithCGImageSize Lib "Cocoa" Selector "initWithCGImage:size:" (aNSImage As Ptr, CGImageRef As Ptr, size As NSSize) As Ptr</SourceLine>
-   <SourceLine>Declare Sub CFRelease Lib "Cocoa" (obj As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setImage Lib "Cocoa" Selector "setImage:" (obj As Ptr, aNSImage As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (value &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>DIM size As NSSize</SourceLine>
-   <SourceLine>size.Height = 0.0</SourceLine>
-   <SourceLine>size.Width = 0.0</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM CGImageRef As Ptr = value.CopyOSHandle(Picture.HandleType.MacCGImage)</SourceLine>
-   <SourceLine>DIM aNSImage As Ptr = initWithCGImageSize(alloc(NSClassFromString("NSImage")), CGImageRef, size)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>setImage me, aNSImage</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>CFRelease aNSImage</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function image Lib "Cocoa" Selector "image" (aNSPathComponentCell As Ptr) As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return me.PictureFromNSImage(image(me))</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>URL</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>URL As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>URL As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (objRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
-   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (objRef As Ptr, aNSURL As Ptr)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), EncodeURLComponent(value))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
-   <SourceLine>setURL me.mHandle, aNSURL</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>release aNSURL</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function absoluteString Lib "Cocoa" Selector "absoluteString" (aNSURL As Ptr) As CFStringRef</SourceLine>
-   <SourceLine>Declare Function URL Lib "Cocoa" Selector "URL" (aNSPathComponentCell As Ptr) As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM aNSURL As Ptr = URL(me)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return DecodeURLComponent(absoluteString(aNSURL))</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>mHandle</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mHandle As Ptr</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mHandle As Ptr</ItemDeclaration>
+  <ItemDeclaration>mInstanceRef As Ptr</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
  <Property>
-  <ItemName>Handle</ItemName>
+  <ItemName>InstanceRef</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Handle As Ptr</SourceLine>
+   <SourceLine>InstanceRef As Ptr</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Handle As Ptr</ItemDeclaration>
+  <ItemDeclaration>InstanceRef As Ptr</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
   <SetAccessor>
@@ -5280,42 +3786,10 @@
   <GetAccessor>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Get</SourceLine>
-   <SourceLine>Return me.mHandle</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>Title</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Title As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Title As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Sub setTitle Lib "Cocoa" Selector "setTitle:" (obj As Ptr, title As CFStringRef)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>setTitle me.mHandle, value</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused value</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function title Lib "Cocoa" Selector "title" (obj As Ptr) As CFStringRef</SourceLine>
-   <SourceLine>Return title(me)</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return me.mInstanceRef</SourceLine>
+   <SourceLine>end try</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Get</SourceLine>
   </GetAccessor>
@@ -5354,91 +3828,7 @@
    <PropertyValue>0</PropertyValue>
    <ItemType>Integer</ItemType>
   </ViewProperty>
-  <ViewProperty>
-   <ObjName>Image</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Picture</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>URL</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Title</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
  </ViewBehavior>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSRect</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>NSRect</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>X As Single</SourceLine>
-   <SourceLine>Y As Single</SourceLine>
-   <SourceLine>Width As Single</SourceLine>
-   <SourceLine>Height As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>NSSize</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>NSSize</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Width As Single</SourceLine>
-   <SourceLine>Height As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>CGRect</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>CGRect</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Origin As CGPoint</SourceLine>
-   <SourceLine>RectSize As CGSize</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>CGPoint</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>CGPoint</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>X As Single</SourceLine>
-   <SourceLine>Y As Single</SourceLine>
-  </ItemSource>
- </Structure>
- <Structure>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemName>CGSize</ItemName>
-  <ItemFlags>33</ItemFlags>
-  <ItemName>CGSize</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Width As Single</SourceLine>
-   <SourceLine>Height As Single</SourceLine>
-  </ItemSource>
- </Structure>
 </block>
 <block type="Module" ID="83466077">
  <ObjName>NSImage</ObjName>
@@ -6681,34 +5071,141 @@
   </ItemSource>
  </Structure>
 </block>
-<block type="Module" ID="1714854946">
- <ObjName>NSHost</ObjName>
+<block type="Module" ID="983195041">
+ <ObjName>NSPathComponentCell</ObjName>
  <ObjContainerID>1021742600</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
  <Method>
-  <ItemName>ClassRef</ItemName>
+  <ItemName>Operator_Convert</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Function ClassRef() As Ptr</SourceLine>
+   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>static classRef As Ptr = NSClassFromString("NSHost")</SourceLine>
-   <SourceLine>Return classRef</SourceLine>
-   <SourceLine>end try</SourceLine>
+   <SourceLine>Return me.mHandle</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>1</IsShared>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
   <ItemParams></ItemParams>
   <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>PictureFromNSImage</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function PictureFromNSImage(aNSImage As Ptr) As Picture</SourceLine>
+   <SourceLine>// Creates a Xojo picture object with the passed NSImage</SourceLine>
+   <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
+   <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (id As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
+   <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (id As Ptr) As NSSize</SourceLine>
+   <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// VARIABLES</SourceLine>
+   <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
+   <SourceLine>DIM nsImageSize As NSSize = Size(aNSImage)</SourceLine>
+   <SourceLine>DIM context As Ptr</SourceLine>
+   <SourceLine>DIM cgRectRef As CGRect</SourceLine>
+   <SourceLine>DIM cgPointRef As CGPoint</SourceLine>
+   <SourceLine>DIM cgSizeRef As CGSize</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// set the default size</SourceLine>
+   <SourceLine>proposedDestRect.Width = nsImageSize.Width</SourceLine>
+   <SourceLine>proposedDestRect.Height = nsImageSize.Height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the CGImage</SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(aNSImage, proposedDestRect, Nil, Nil)</SourceLine>
+   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>// create the xojo picture</SourceLine>
+   <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>cgPointRef.X = 0.0</SourceLine>
+   <SourceLine>cgPointRef.Y = 0.0</SourceLine>
+   <SourceLine>cgSizeRef.Width = returnValue.Width</SourceLine>
+   <SourceLine>cgSizeRef.Height = returnValue.Height</SourceLine>
+   <SourceLine>cgRectRef.Origin = cgPointRef</SourceLine>
+   <SourceLine>cgRectRef.RectSize = cgSizeRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>context = Ptr(returnValue.Graphics.Handle(Graphics.HandleTypeCGContextRef))</SourceLine>
+   <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aNSImage As Ptr</ItemParams>
+  <ItemResult>Picture</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(aNSPathControl As Ptr)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function clickedPathComponentCell Lib "Cocoa" Selector "clickedPathComponentCell" (aNSPathControl As Ptr) As Ptr</SourceLine>
+   <SourceLine>me.mHandle = clickedPathComponentCell(aNSPathControl)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aNSPathControl As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(Optional image As Picture, title As String, URL As String)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.mHandle = init(alloc(NSClassFromString("NSPathComponentCell")))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.Title = title</SourceLine>
+   <SourceLine>me.URL = "data://" + URL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (image &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>me.Image = image</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>Optional image As Picture, title As String, URL As String</ItemParams>
+  <ItemResult></ItemResult>
  </Method>
  <ExternalMethod>
   <ItemName>NSClassFromString</ItemName>
@@ -6727,310 +5224,130 @@
   <LibraryName>Cocoa</LibraryName>
   <SoftLink>0</SoftLink>
  </ExternalMethod>
- <Method>
-  <ItemName>CurrentHost</ItemName>
+ <Property>
+  <ItemName>Image</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function CurrentHost() As NSHost</SourceLine>
-   <SourceLine>// Returns a NSHost object representing the host the process is running on.</SourceLine>
+   <SourceLine>Image As Picture</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function currentHost Lib "Cocoa" Selector "currentHost" (classRef As Ptr) As Ptr</SourceLine>
-   <SourceLine>Static currentHost As NSHost = NEW NSHost(currentHost(NSHost.ClassRef))</SourceLine>
-   <SourceLine>Return currentHost</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>NSHost</ItemResult>
- </Method>
- <Method>
-  <ItemName>HostWithAddress</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function HostWithAddress(address As String) As NSHost</SourceLine>
-   <SourceLine>// Returns a NSHost with the Internet address &lt;address&gt;.</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function hostWithAddress Lib "Cocoa" Selector "hostWithAddress:" (classRef As Ptr, address As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Return NEW NSHost(hostWithAddress(NSHost.ClassRef, address))</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused address</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams>address As String</ItemParams>
-  <ItemResult>NSHost</ItemResult>
- </Method>
- <Method>
-  <ItemName>Constructor</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor(anInstanceRef As Ptr)</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>me.mInstanceRef = anInstanceRef</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>anInstanceRef As Ptr</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Method>
-  <ItemName>HostWithName</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function HostWithName(name As String) As NSHost</SourceLine>
-   <SourceLine>// Returns a host with a specific name.</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function hostWithName Lib "Cocoa" Selector "hostWithName:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>Return NEW NSHost(hostWithName(NSHost.ClassRef, name))</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused name</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams>name As String</ItemParams>
-  <ItemResult>NSHost</ItemResult>
- </Method>
- <Method>
-  <ItemName>Address</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Address() As String</SourceLine>
-   <SourceLine>// Returns one of the network addresses of the receiver.</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function address Lib "Cocoa" Selector "address" (aNSHost As Ptr) As CFStringRef</SourceLine>
-   <SourceLine>Return address(me.mInstanceRef)</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
+  <ItemDeclaration>Image As Picture</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>Addresses</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
+  <SetAccessor>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Addresses() As String()</SourceLine>
-   <SourceLine>// Returns all the network addresses of the receiver.</SourceLine>
-   <SourceLine>// Note: this is blocking and your application will lock up</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Set</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function addresses Lib "Cocoa" Selector "addresses" (aNSHost As Ptr) As Ptr  // NSArray</SourceLine>
-   <SourceLine>DIM addressesArray As Ptr = addresses(me.mInstanceRef)</SourceLine>
-   <SourceLine>Return NSArrayToXojoArray(addressesArray)</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String()</ItemResult>
- </Method>
- <Method>
-  <ItemName>HostName</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function HostName() As String</SourceLine>
-   <SourceLine>// Returns one of the hostnames of the receiver.</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithCGImageSize Lib "Cocoa" Selector "initWithCGImage:size:" (aNSImage As Ptr, CGImageRef As Ptr, size As NSSize) As Ptr</SourceLine>
+   <SourceLine>Declare Sub CFRelease Lib "Cocoa" (obj As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setImage Lib "Cocoa" Selector "setImage:" (obj As Ptr, aNSImage As Ptr)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (aNSHost As Ptr) As CFStringRef</SourceLine>
-   <SourceLine>Return name(me.mInstanceRef)</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>LocalizedName</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine> Shared Function LocalizedName() As String</SourceLine>
-   <SourceLine>// Returns the name used as by default when publishing NSNetServices.</SourceLine>
+   <SourceLine>if (value &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>DIM size As NSSize</SourceLine>
+   <SourceLine>size.Height = 0.0</SourceLine>
+   <SourceLine>size.Width = 0.0</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function localizedName Lib "Cocoa" Selector "localizedName" (currentHost As Ptr) As CFStringRef</SourceLine>
-   <SourceLine>Return localizedName(CurrentHost)</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>1</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>Operator_Convert</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Return me.mInstanceRef</SourceLine>
-   <SourceLine>end try</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>Ptr</ItemResult>
- </Method>
- <Method>
-  <ItemName>HostNames</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function HostNames() As String()</SourceLine>
-   <SourceLine>// Returns all the hostnames of the receiver.</SourceLine>
-   <SourceLine>// Note: this is blocking and your application will lock up</SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = value.CopyOSHandle(Picture.HandleType.MacCGImage)</SourceLine>
+   <SourceLine>DIM aNSImage As Ptr = initWithCGImageSize(alloc(NSClassFromString("NSImage")), CGImageRef, size)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Declare Function names Lib "Cocoa" Selector "names" (aNSHost As Ptr) As Ptr  // NSArray</SourceLine>
-   <SourceLine>DIM namesArray As Ptr = names(me.mInstanceRef)</SourceLine>
-   <SourceLine>Return NSArrayToXojoArray(namesArray)</SourceLine>
-   <SourceLine>end try</SourceLine>
+   <SourceLine>setImage me, aNSImage</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
-   <SourceLine>#pragma Unused aNSHost</SourceLine>
-   <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String()</ItemResult>
- </Method>
- <Method>
-  <ItemName>NSArrayToXojoArray</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function NSArrayToXojoArray(aNSArray As Ptr) As String()</SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>Declare Function count Lib "Cocoa" Selector "count" (aNSArray As Ptr) As Integer</SourceLine>
-   <SourceLine>Declare Function objectAtIndex Lib "Cocoa" Selector "objectAtIndex:" (aNSArray As Ptr, index As Integer) As CFStringRef  // NSObject</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM count As Integer = count(aNSArray)</SourceLine>
-   <SourceLine>DIM returnValue(0) As String</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>if (count &gt; 0) then</SourceLine>
-   <SourceLine>REDIM returnValue(count - 1)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>for i as Integer = 0 to (count - 1)</SourceLine>
-   <SourceLine>returnValue.Append objectAtIndex(aNSArray, i)</SourceLine>
-   <SourceLine>next</SourceLine>
+   <SourceLine>CFRelease aNSImage</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
    <SourceLine>#endif</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>aNSArray As Ptr</ItemParams>
-  <ItemResult>String()</ItemResult>
- </Method>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function image Lib "Cocoa" Selector "image" (aNSPathComponentCell As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.PictureFromNSImage(image(me))</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
  <Property>
-  <ItemName>mInstanceRef</ItemName>
+  <ItemName>URL</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mInstanceRef As Ptr</SourceLine>
+   <SourceLine>URL As String</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mInstanceRef As Ptr</ItemDeclaration>
+  <ItemDeclaration>URL As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (objRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (objRef As Ptr, aNSURL As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), EncodeURLComponent(value))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>setURL me.mHandle, aNSURL</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>release aNSURL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function absoluteString Lib "Cocoa" Selector "absoluteString" (aNSURL As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Declare Function URL Lib "Cocoa" Selector "URL" (aNSPathComponentCell As Ptr) As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = URL(me)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return DecodeURLComponent(absoluteString(aNSURL))</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mHandle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mHandle As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mHandle As Ptr</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
  <Property>
-  <ItemName>InstanceRef</ItemName>
+  <ItemName>Handle</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>InstanceRef As Ptr</SourceLine>
+   <SourceLine>Handle As Ptr</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>InstanceRef As Ptr</ItemDeclaration>
+  <ItemDeclaration>Handle As Ptr</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
   <SetAccessor>
@@ -7042,10 +5359,42 @@
   <GetAccessor>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Get</SourceLine>
+   <SourceLine>Return me.mHandle</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Title</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Title As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Title As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>try</SourceLine>
-   <SourceLine>Return me.mInstanceRef</SourceLine>
-   <SourceLine>end try</SourceLine>
+   <SourceLine>Declare Sub setTitle Lib "Cocoa" Selector "setTitle:" (obj As Ptr, title As CFStringRef)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>setTitle me.mHandle, value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function title Lib "Cocoa" Selector "title" (obj As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return title(me)</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Get</SourceLine>
   </GetAccessor>
@@ -7084,7 +5433,1658 @@
    <PropertyValue>0</PropertyValue>
    <ItemType>Integer</ItemType>
   </ViewProperty>
+  <ViewProperty>
+   <ObjName>Image</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>URL</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Title</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
  </ViewBehavior>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Origin As CGPoint</SourceLine>
+   <SourceLine>RectSize As CGSize</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGPoint</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGPoint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+</block>
+<block type="Module" ID="1499674929">
+ <ObjName>NSPathControl</ObjName>
+ <ObjContainerID>1021742600</ObjContainerID>
+ <IsClass>1</IsClass>
+ <Superclass>Canvas</Superclass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <HookInstance>
+  <ItemName>Open</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Open()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithFrame Lib "Cocoa" Selector "initWithFrame:" (obj As Ptr, frameRect As NSRect) As Ptr</SourceLine>
+   <SourceLine>Declare Sub addSubview Lib "Cocoa" Selector "addSubview:" (obj As Ptr, aView As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setAction Lib "Cocoa" Selector "setAction:" (obj As Ptr, aSelector As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setAutoresizingMask Lib "Cocoa" Selector "setAutoresizingMask:" (obj As Ptr, mask As Integer)</SourceLine>
+   <SourceLine>Declare Sub setDoubleAction Lib "Cocoa" Selector "setDoubleAction:" (obj As Ptr, aSelector As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setTarget Lib "Cocoa" Selector "setTarget:" (obj As Ptr, anObject As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//-----</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.mSubView = initWithFrame(alloc(NSClassFromString("NSPathControl")), me.Frame)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.mSubView &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>// attach the NSPathControl to the canvas, the resizing will be handled by the canvas</SourceLine>
+   <SourceLine>addSubview Ptr(me.Handle), me.mSubView</SourceLine>
+   <SourceLine>setAutoResizingMask me.mSubView, (NSViewWidthSizable OR NSViewHeightSizable)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>me.mInstance = init(alloc(SSPathControlClass))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>setAction me.mSubView, NSSelectorFromString("action:")</SourceLine>
+   <SourceLine>setDoubleAction me.mSubView, NSSelectorFromString("doubleClick:")</SourceLine>
+   <SourceLine>setTarget me.mSubView, me.mInstance</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>NSPathControls.Append me</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>RaiseEvent Open</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>DoubleClick</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub DoubleClick(X As Integer, Y As Integer)</SourceLine>
+   <SourceLine>#pragma Unused X</SourceLine>
+   <SourceLine>#pragma Unused Y</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// moo</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <Method>
+  <ItemName>Action</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Action()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>RaiseEvent Action NEW NSPathComponentCell(me)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ActionHandler</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Sub ActionHandler(id As Ptr, sel As Ptr, sender As Ptr)</SourceLine>
+   <SourceLine>if (UBound(NSPathControls) &gt; -1) then</SourceLine>
+   <SourceLine>for i as Integer = 0 to UBound(NSPathControls)</SourceLine>
+   <SourceLine>if (NSPathControls(i).mInstance = id) then</SourceLine>
+   <SourceLine>NSPathControls(i).Action</SourceLine>
+   <SourceLine>exit for i</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>id As Ptr, sel As Ptr, sender As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>URL</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub URL(Assigns value As FolderItem)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (objRef As Ptr, aString As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (obj As Ptr, aNSURL As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), value.URLPath)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>setURL me, aNSURL</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>release aNSURL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>Assigns value As FolderItem</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>URL</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub URL(Assigns value As String)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function initWithString Lib "Cocoa" Selector "initWithString:" (NSURLClass As Ptr, aString As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (obj As Ptr)</SourceLine>
+   <SourceLine>Declare Sub setURL Lib "Cocoa" Selector "setURL:" (objRef As Ptr, aNSURL As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSURL As Ptr = initWithString(alloc(NSClassFromString("NSURL")), value)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (aNSURL &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>setURL me.mSubView, aNSURL</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>release aNSURL</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>Assigns value As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Init</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Sub Init()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>if (SSPathControlClass = Nil) then</SourceLine>
+   <SourceLine>// create our subclass</SourceLine>
+   <SourceLine>SSPathControlClass = objc_allocateClassPair(NSClassFromString("NSObject"), "SSPathControl", 0)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// add methods to the subclass</SourceLine>
+   <SourceLine>if (not class_addMethod(SSPathControlClass, NSSelectorFromString("action:"), AddressOf ActionHandler, "v@:@")) then Break</SourceLine>
+   <SourceLine>if (not class_addMethod(SSPathControlClass, NSSelectorFromString("doubleClick:"), AddressOf DoubleActionHandler, "v@:@")) then Break</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// register the new class with the runtime</SourceLine>
+   <SourceLine>objc_registerClassPair SSPathControlClass</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DoubleActionHandler</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Sub DoubleActionHandler(id As Ptr, sel As Ptr, sender As Ptr)</SourceLine>
+   <SourceLine>if (UBound(NSPathControls) &gt; -1) then</SourceLine>
+   <SourceLine>for i as Integer = 0 to UBound(NSPathControls)</SourceLine>
+   <SourceLine>if (NSPathControls(i).mInstance = id) then</SourceLine>
+   <SourceLine>NSPathControls(i).DoubleAction</SourceLine>
+   <SourceLine>exit for i</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>id As Ptr, sel As Ptr, sender As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
+   <SourceLine>Return me.mSubView</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DoubleAction</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub DoubleAction()</SourceLine>
+   <SourceLine>RaiseEvent DoubleClick NEW NSPathComponentCell(me)</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <ExternalMethod>
+  <ItemName>NSClassFromString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (className As CFStringRef) As Ptr</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>className As CFStringRef</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <ExternalMethod>
+  <ItemName>NSSelectorFromString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function NSSelectorFromString Lib "Cocoa" (aSelector As CFStringRef) As Ptr</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aSelector As CFStringRef</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <ExternalMethod>
+  <ItemName>objc_allocateClassPair</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function objc_allocateClassPair Lib "Cocoa" (superclass As Ptr, name As CString, extraBytes As Integer) As Ptr</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>superclass As Ptr, name As CString, extraBytes As Integer</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <ExternalMethod>
+  <ItemName>class_addMethod</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Function class_addMethod Lib "Cocoa" (classRef As Ptr, name As Ptr, imp As Ptr, types As CString) As Boolean</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>classRef As Ptr, name As Ptr, imp As Ptr, types As CString</ItemParams>
+  <ItemResult>Boolean</ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <ExternalMethod>
+  <ItemName>objc_registerClassPair</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Declare Sub objc_registerClassPair Lib "Cocoa" (classRef As Ptr)</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>classRef As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+  <LibraryName>Cocoa</LibraryName>
+  <SoftLink>0</SoftLink>
+ </ExternalMethod>
+ <Method>
+  <ItemName>PictureFromNSImage</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function PictureFromNSImage(aNSImage As Ptr) As Picture</SourceLine>
+   <SourceLine>// Creates a Xojo picture object with the passed NSImage</SourceLine>
+   <SourceLine>// Defaults to a 32x32 image, if you need a different size, use the SetSize method on the NSImage</SourceLine>
+   <SourceLine>// DIM pict As Picture = Cocoa.PictureInitWithNSImage(aNSImage)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM returnValue As Picture</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function CGImageForPropsedRectContextHints Lib "Cocoa" Selector "CGImageForProposedRect:context:hints:" (id As Ptr, ByRef proposedDestRect As NSRect, referenceContext As Ptr, hints As Ptr) As Ptr  // CGImageRef</SourceLine>
+   <SourceLine>Declare Function CGImageGetHeight Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function CGImageGetWidth Lib "Cocoa" (image As Ptr) As Integer</SourceLine>
+   <SourceLine>Declare Function Size Lib "Cocoa" Selector "size" (id As Ptr) As NSSize</SourceLine>
+   <SourceLine>Declare Sub CGContextDrawImage Lib "Cocoa" (context As Ptr, rect As CGRect, image As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// VARIABLES</SourceLine>
+   <SourceLine>DIM proposedDestRect As NSRect</SourceLine>
+   <SourceLine>DIM nsImageSize As NSSize = Size(aNSImage)</SourceLine>
+   <SourceLine>DIM context As Ptr</SourceLine>
+   <SourceLine>DIM cgRectRef As CGRect</SourceLine>
+   <SourceLine>DIM cgPointRef As CGPoint</SourceLine>
+   <SourceLine>DIM cgSizeRef As CGSize</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// set the default size</SourceLine>
+   <SourceLine>proposedDestRect.Width = nsImageSize.Width</SourceLine>
+   <SourceLine>proposedDestRect.Height = nsImageSize.Height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the CGImage</SourceLine>
+   <SourceLine>DIM CGImageRef As Ptr = CGImageForPropsedRectContextHints(aNSImage, proposedDestRect, Nil, Nil)</SourceLine>
+   <SourceLine>if (CGImageRef &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>// create the xojo picture</SourceLine>
+   <SourceLine>returnValue = NEW Picture(CGImageGetWidth(CGImageRef), CGImageGetHeight(CGImageRef))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>cgPointRef.X = 0.0</SourceLine>
+   <SourceLine>cgPointRef.Y = 0.0</SourceLine>
+   <SourceLine>cgSizeRef.Width = returnValue.Width</SourceLine>
+   <SourceLine>cgSizeRef.Height = returnValue.Height</SourceLine>
+   <SourceLine>cgRectRef.Origin = cgPointRef</SourceLine>
+   <SourceLine>cgRectRef.RectSize = cgSizeRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>context = Ptr(returnValue.Graphics.Handle(returnValue.Graphics.HandleTypeCGContextRef))</SourceLine>
+   <SourceLine>CGContextDrawImage context, cgRectRef, CGImageRef</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>aNSImage As Ptr</ItemParams>
+  <ItemResult>Picture</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor()</SourceLine>
+   <SourceLine>NSPathControl.Init</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Calling the overridden superclass constructor.</SourceLine>
+   <SourceLine>Super.Constructor</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>4096</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>SetPathComponentCells</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub SetPathComponentCells(cells() As NSPathComponentCell)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function initWithObjectsCount Lib "Cocoa" Selector "initWithObjects:count:" (aNSArray As Ptr, objects As Ptr, count As UInt32) As Ptr</SourceLine>
+   <SourceLine>Declare Sub setPathComponentCells Lib "Cocoa" Selector "setPathComponentCells:" (aNSPathControl As Ptr, aNSArray As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM count As UInt32 = UBound(cells) + 1</SourceLine>
+   <SourceLine>DIM aMemoryBlock As NEW MemoryBlock(me.SizeOfPointer * count)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i as Integer = 0 to UBound(cells)</SourceLine>
+   <SourceLine>aMemoryBlock.UInt32Value(i * me.SizeOfPointer) = UInt32(cells(i).Handle)</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aNSArray As Ptr = initWithObjectsCount(alloc(NSClassFromString("NSArray")), aMemoryBlock, count)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>setPathComponentCells me, aNSArray</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>cells() As NSPathComponentCell</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Hook>
+  <ItemName>Open</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>DoubleClick</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>cell As NSPathComponentCell</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>Action</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>cell As NSPathComponentCell</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Property>
+  <ItemName>SSPathControlClass</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared SSPathControlClass As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>SSPathControlClass As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mSubView</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mSubView As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mSubView As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>NSPathControls()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared NSPathControls() As NSPathControl</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>NSPathControls() As NSPathControl</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Frame</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Frame As NSRect</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Frame As NSRect</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM value As NSRect</SourceLine>
+   <SourceLine>value.X = 0.0</SourceLine>
+   <SourceLine>value.Y = 0.0</SourceLine>
+   <SourceLine>value.Width = me.Width</SourceLine>
+   <SourceLine>value.Height = me.Height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return value</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>FrameRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>FrameRect As REALbasic.Rect</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>FrameRect As REALbasic.Rect</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>DIM value As NEW REALbasic.Rect</SourceLine>
+   <SourceLine>value.Left = me.Frame.X</SourceLine>
+   <SourceLine>value.Top = me.Frame.Y</SourceLine>
+   <SourceLine>value.Width = me.Frame.Width</SourceLine>
+   <SourceLine>value.Height = me.Frame.Height</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return value</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mInstance</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mInstance As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mInstance As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>FocusRingType</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>FocusRingType As NSFocusRingType</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>FocusRingType As NSFocusRingType</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function cell Lib "Cocoa" Selector "cell" (obj As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Sub setFocusRingType Lib "Cocoa" Selector "setFocusRingType:" (obj As Ptr, value As NSFocusRingType)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aCell As Ptr = cell(me)</SourceLine>
+   <SourceLine>setFocusRingType aCell, value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>PathStyle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>PathStyle As NSPathStyle</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>PathStyle As NSPathStyle</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function cell Lib "Cocoa" Selector "cell" (obj As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Sub setPathStyle Lib "Cocoa" Selector "setPathStyle:" (obj As Ptr, value As NSPathStyle)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM aCell As Ptr = cell(me)</SourceLine>
+   <SourceLine>setPathStyle aCell, value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>BackgroundColor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>BackgroundColor As Color</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>BackgroundColor As Color</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>DIM value As Color = &amp;c00000000</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (me.mSubView &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>Declare Function backgroundColor Lib "Cocoa" Selector "backgroundColor" (obj As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function colorUsingColorSpaceName Lib "Cocoa" Selector "colorUsingColorSpaceName:" (obj As Ptr, colorSpace As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Sub getRedGreenBlueAlpha Lib "Cocoa" Selector "getRed:green:blue:alpha:" (obj As Ptr, ByRef red As Single, ByRef green As Single, ByRef blue As Single, ByRef alpha As Single)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM NSColor As Ptr = backgroundColor(me)</SourceLine>
+   <SourceLine>NSColor = colorUsingColorSpaceName(NSColor, "NSCalibratedRGBColorSpace")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DIM red As Single</SourceLine>
+   <SourceLine>DIM green As Single</SourceLine>
+   <SourceLine>DIM blue As Single</SourceLine>
+   <SourceLine>DIM alpha As Single</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>getRedGreenBlueAlpha NSColor, red, green, blue, alpha</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>red = 255.0 * red</SourceLine>
+   <SourceLine>green = 255.0 * green</SourceLine>
+   <SourceLine>blue = 255.0 * blue</SourceLine>
+   <SourceLine>alpha = 255.0 - (alpha * 255.0)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>value = RGB(red, green, blue, alpha)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return value</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>AcceptFocus</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AcceptTabs</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AutoDeactivate</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Backdrop</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <ItemType>Picture</ItemType>
+   <EditorType>Picture</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>BackgroundColor</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>&amp;c000000</PropertyValue>
+   <ItemType>Color</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>DoubleBuffer</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Enabled</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>EraseBackground</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Height</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>100</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>HelpTag</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>InitialParent</ObjName>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockBottom</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockLeft</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockRight</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockTop</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TabIndex</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TabPanelIndex</ObjName>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TabStop</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Transparent</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+   <EditorType>Boolean</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>UseFocusRing</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Visible</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Width</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>100</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>NSViewHeightSizable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSViewHeightSizable</ItemName>
+  <ItemType>2</ItemType>
+  <ItemDef>16</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSViewMinYMargin</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSViewMinYMargin</ItemName>
+  <ItemType>2</ItemType>
+  <ItemDef>8</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>NSViewWidthSizable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSViewWidthSizable</ItemName>
+  <ItemType>2</ItemType>
+  <ItemDef>2</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>SizeOfPointer</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>SizeOfPointer</ItemName>
+  <ItemType>2</ItemType>
+  <ItemDef>4</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>NSSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGPoint</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGPoint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>X As Single</SourceLine>
+   <SourceLine>Y As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGRect</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGRect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Origin As CGPoint</SourceLine>
+   <SourceLine>RectSize As CGSize</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Structure>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>CGSize</ItemName>
+  <ItemFlags>33</ItemFlags>
+  <ItemName>CGSize</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Width As Single</SourceLine>
+   <SourceLine>Height As Single</SourceLine>
+  </ItemSource>
+ </Structure>
+ <Enumeration>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSFocusRingType</ItemName>
+  <ItemFlags>0</ItemFlags>
+  <ItemName>NSFocusRingType</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>NSFocusRingTypeDefault = 0</SourceLine>
+   <SourceLine>NSFocusRingTypeNone = 1</SourceLine>
+   <SourceLine>NSFocusRingTypeExterior = 2</SourceLine>
+   <SourceLine>Default = 0</SourceLine>
+   <SourceLine>None = 1</SourceLine>
+   <SourceLine>Exterior = 2</SourceLine>
+  </ItemSource>
+ </Enumeration>
+ <Enumeration>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>NSPathStyle</ItemName>
+  <ItemFlags>0</ItemFlags>
+  <ItemType>Integer</ItemType>
+  <ItemName>NSPathStyle</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>NSPathStyleStandard = 0</SourceLine>
+   <SourceLine>NSPathStyleNavigationBar = 1</SourceLine>
+   <SourceLine>NSPathStylePopUp = 2</SourceLine>
+   <SourceLine>Standard = 0</SourceLine>
+   <SourceLine>NavigationBar = 1</SourceLine>
+   <SourceLine>PopUp = 2</SourceLine>
+  </ItemSource>
+ </Enumeration>
+</block>
+<block type="Module" ID="696333263">
+ <ObjName>NSWorkspace</ObjName>
+ <ObjContainerID>1021742600</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>0</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>// DECLARES</SourceLine>
+   <SourceLine>Declare Function alloc Lib "Cocoa" Selector "alloc" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function init Lib "Cocoa" Selector "init" (classRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function objc_allocateClassPair Lib "Cocoa" (superclass As Ptr, name As CString, extraBytes As Integer) As Ptr</SourceLine>
+   <SourceLine>Declare Function class_addMethod Lib "Cocoa" (aClass As Ptr, name As Ptr, imp As Ptr, types As CString) As Boolean</SourceLine>
+   <SourceLine>Declare Sub objc_registerClassPair Lib "Cocoa" (aClass As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Declare Function NSClassFromString Lib "Cocoa" (aClassName As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Function NSSelectorFromString Lib "Cocoa" (aSelector As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Declare Function sharedWorkspace Lib "Cocoa" Selector "sharedWorkspace" (id As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Function notificationCenter Lib "Cocoa" Selector "notificationCenter" (id As Ptr) As Ptr</SourceLine>
+   <SourceLine>Declare Sub addObserver Lib "Cocoa" Selector "addObserver:selector:name:object:" (id As Ptr, notificationObserver As Ptr, notificationSelector As Ptr, notificationName As CFStringRef, notificationSender As Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the workspace</SourceLine>
+   <SourceLine>if (NSWorkspace.Workspace = Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.Workspace = NSClassFromString("NSWorkspace")</SourceLine>
+   <SourceLine>NSWorkspace.SharedWorkspace = sharedWorkspace(NSWorkspace.Workspace)</SourceLine>
+   <SourceLine>NSWorkspace.NotificationCenter = notificationCenter(NSWorkspace.SharedWorkspace)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// create the notification observer</SourceLine>
+   <SourceLine>if (NSWorkspace.DelegateClass = Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.DelegateClass = objc_allocateClassPair(NSClassFromString("NSObject"), me.Identifier, 0)</SourceLine>
+   <SourceLine>objc_registerClassPair NSWorkspace.DelegateClass  // register the class</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// add the methods to the new class</SourceLine>
+   <SourceLine>if (not class_addMethod(NSWorkspace.DelegateClass, NSSelectorFromString("DispatchNotification:"), AddressOf NSWorkspace.DispatchNotification, "v@:@")) then Break</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>NSWorkspace.DelegateInstance = init(alloc(NSWorkspace.DelegateClass))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// add all the notifications</SourceLine>
+   <SourceLine>addObserver NSWorkspace.NotificationCenter, NSWorkspace.DelegateInstance, NSSelectorFromString("DispatchNotification:"), Nil, NSWorkspace.SharedWorkspace</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Create</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function Create() As NSWorkspace</SourceLine>
+   <SourceLine>DIM returnValue As NSWorkspace</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>if (NSWorkspace.DelegateClassRef = Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.DelegateClassRef = NEW NSWorkspace</SourceLine>
+   <SourceLine>returnValue = NSWorkspace.DelegateClassRef</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return returnValue</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>NSWorkspace</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DispatchNotification</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub DispatchNotification(notification As Ptr)</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function name Lib "Cocoa" Selector "name" (id As Ptr) As CFStringRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>select case name(notification)</SourceLine>
+   <SourceLine>case "NSWorkspaceWillLaunchApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceWillLaunchApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidLaunchApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidLaunchApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidTerminateApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidTerminateApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceSessionDidBecomeActiveNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceSessionDidBecomeActiveNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceSessionDidResignActiveNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceSessionDidResignActiveNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidHideApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidHideApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidUnhideApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidUnhideApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidActivateApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidActivateApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidDeactivateApplicationNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidDeactivateApplicationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidRenameVolumeNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidRenameVolumeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidMountNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidMountNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceWillUnmountNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceWillUnmountNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidUnmountNotification"</SourceLine>
+   <SourceLine>RaiseEvent NSWorkspaceDidUnmountNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidPerformFileOperationNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceDidPerformFileOperationNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidChangeFileLabelsNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceDidChangeFileLabelsNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceActiveSpaceDidChangeNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceActiveSpaceDidChangeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceDidWakeNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceDidWakeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceWillPowerOffNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceWillPowerOffNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceWillSleepNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceWillSleepNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceScreensDidSleepNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceScreensDidSleepNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>case "NSWorkspaceScreensDidWakeNotification"</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceScreensDidWakeNotification</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>RaiseEvent  NSWorkspaceOtherNotification</SourceLine>
+   <SourceLine>end select</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>notification As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DispatchNotification</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Sub DispatchNotification(id As Ptr, sel As Ptr, notification As Ptr)</SourceLine>
+   <SourceLine>#pragma Unused id</SourceLine>
+   <SourceLine>#pragma Unused sel</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if (notification &lt;&gt; Nil) then</SourceLine>
+   <SourceLine>NSWorkspace.DelegateClassRef.DispatchNotification notification</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>id As Ptr, sel As Ptr, notification As Ptr</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>IconForFileType</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function IconForFileType(fileType As String) As Ptr</SourceLine>
+   <SourceLine>// returns a NSImage for the file type passed</SourceLine>
+   <SourceLine>// DIM aNSImage As Ptr = Cocoa.IconForFileType("png")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function iconForFileType Lib "Cocoa" Selector "iconForFileType:" (SharedWorkspace As Ptr, fileType As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>Return iconForFileType(SharedWorkspace, fileType)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#pragma Unused fileType</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>fileType As String</ItemParams>
+  <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Hook>
+  <ItemName>NSWorkspaceActiveSpaceDidChangeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidActivateApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidChangeFileLabelsNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidDeactivateApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidHideApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidLaunchApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidMountNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidPerformFileOperationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidRenameVolumeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidTerminateApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidUnhideApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidUnmountNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceDidWakeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceOtherNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceScreensDidSleepNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceScreensDidWakeNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceSessionDidBecomeActiveNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceSessionDidResignActiveNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillLaunchApplicationNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillPowerOffNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillSleepNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>NSWorkspaceWillUnmountNotification</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Property>
+  <ItemName>DelegateClass</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared DelegateClass As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DelegateClass As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DelegateClassRef</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared DelegateClassRef As NSWorkspace</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DelegateClassRef As NSWorkspace</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DelegateInstance</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared DelegateInstance As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DelegateInstance As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>NotificationCenter</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared NotificationCenter As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>NotificationCenter As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>SharedWorkspace</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared SharedWorkspace As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>SharedWorkspace As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Workspace</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Workspace As Ptr</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Workspace As Ptr</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>Identifier</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>Identifier</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>tk.shaosean.cocoa.observer</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
 </block>
 <block type="UIState" ID="0">
  <StudioWindowState>
@@ -7092,9 +7092,8 @@
    <EditorCount>1</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>Window1.Controls.TextArea1</EditorLocation>
+    <EditorLocation></EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>22886804</EditingPartID>
    </Editor>
    <SelectedTab>0</SelectedTab>
   </Editors>
