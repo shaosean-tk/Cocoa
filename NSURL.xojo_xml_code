@@ -724,8 +724,7 @@
    <SourceLine>Return resourceSpecifier(me)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>#else</SourceLine>
-   <SourceLine>DIM returnValue As String</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Return me.mResourceSpecifier</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Get</SourceLine>
   </GetAccessor>

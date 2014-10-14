@@ -843,7 +843,7 @@
    </Editor>
    <Editor>
     <EditorIndex>1</EditorIndex>
-    <EditorLocation>NSURL.FromFolderItem</EditorLocation>
+    <EditorLocation>NSURL.ResourceSpecifier</EditorLocation>
     <EditorPath>NSURL.</EditorPath>
     <EditingPartID>871613483</EditingPartID>
    </Editor>
