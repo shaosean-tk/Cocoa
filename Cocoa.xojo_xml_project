@@ -19,7 +19,7 @@
  <DefaultLanguage>0</DefaultLanguage>
  <CurrentLanguage>0</CurrentLanguage>
  <DefaultEncoding>0</DefaultEncoding>
- <BuildFlags>18688</BuildFlags>
+ <BuildFlags>26880</BuildFlags>
  <UseBuildsFolder>1</UseBuildsFolder>
  <WebApp>0</WebApp>
  <Icon>
@@ -837,17 +837,17 @@
    <EditorCount>2</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>NSURL</EditorLocation>
+    <EditorLocation>Window1</EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>1655040962</EditingPartID>
+    <EditingPartID>22886804</EditingPartID>
    </Editor>
    <Editor>
     <EditorIndex>1</EditorIndex>
-    <EditorLocation>NSURL.</EditorLocation>
+    <EditorLocation>NSURL.FromFolderItem</EditorLocation>
     <EditorPath>NSURL.</EditorPath>
     <EditingPartID>871613483</EditingPartID>
    </Editor>
-   <SelectedTab>1</SelectedTab>
+   <SelectedTab>0</SelectedTab>
   </Editors>
  </StudioWindowState>
 </block>

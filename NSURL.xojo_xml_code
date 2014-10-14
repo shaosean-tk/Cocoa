@@ -25,7 +25,7 @@
    <SourceLine>try</SourceLine>
    <SourceLine>DIM returnValue As NSURL</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>#if not TargetCocoa</SourceLine>
    <SourceLine>Declare Function URLWithString Lib "Cocoa" Selector "URLWithString:" (classRef As Ptr, URLString As CFStringRef) As Ptr</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>DIM instanceRef As Ptr = URLWithString(NSURLClassRef, URL)</SourceLine>
@@ -45,16 +45,21 @@
    <SourceLine>returnValue = NEW NSURL()</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>returnValue.mScheme = match.SubExpressionString(2)  ' scheme</SourceLine>
+   <SourceLine>returnValue.mResourceSpecifier = match.SubExpressionString(3)</SourceLine>
    <SourceLine>returnValue.ParseAuthority match.SubExpressionString(4)  ' authority</SourceLine>
    <SourceLine>returnValue.mPath = match.SubExpressionString(5)  ' path</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if (count &gt; 6) then</SourceLine>
-   <SourceLine>returnValue.mQuery = match.SubExpressionString(6)  ' query</SourceLine>
+   <SourceLine>returnValue.mResourceSpecifier = returnValue.mResourceSpecifier + match.SubExpressionString(6)</SourceLine>
+   <SourceLine>returnValue.mQuery = match.SubExpressionString(7)  ' query</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if (count = 10) then</SourceLine>
+   <SourceLine>returnValue.mResourceSpecifier = returnValue.mResourceSpecifier + match.SubExpressionString(8)</SourceLine>
    <SourceLine>returnValue.mFragment = match.SubExpressionString(9)  ' fragment</SourceLine>
    <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>returnValue.mAbsoluteString = URL</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine></SourceLine>
@@ -209,6 +214,25 @@
   <IsShared>0</IsShared>
   <ItemParams></ItemParams>
   <ItemResult>Ptr</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromFolderItem</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function FromFolderItem(aFolderItem As FolderItem) As NSURL</SourceLine>
+   <SourceLine>try</SourceLine>
+   <SourceLine>Return FromString(aFolderItem.URLPath)</SourceLine>
+   <SourceLine>end try</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>aFolderItem As FolderItem</ItemParams>
+  <ItemResult>NSURL</ItemResult>
  </Method>
  <Note>
   <ItemName>Notes</ItemName>
@@ -654,6 +678,72 @@
    <SourceLine>End Get</SourceLine>
   </GetAccessor>
  </Property>
+ <Property>
+  <ItemName>mAbsoluteString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mAbsoluteString As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mAbsoluteString As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>ResourceSpecifier</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Property ResourceSpecifier As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ResourceSpecifier As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>// Return Value</SourceLine>
+   <SourceLine>// The resource specifier of the URL. For example, in the URL </SourceLine>
+   <SourceLine>// http://www.example.com/index.html?key1=value1#jumplink, the resource specifier </SourceLine>
+   <SourceLine>// is //www.example.com/index.html?key1=value1#jumplink (everything after the colon).</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Function resourceSpecifier Lib "Cocoa" Selector "resourceSpecifier" (instanceRef As Ptr) As CFStringRef</SourceLine>
+   <SourceLine>Return resourceSpecifier(me)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>DIM returnValue As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mResourceSpecifier</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mResourceSpecifier As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mResourceSpecifier As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Name</ObjName>
@@ -692,26 +782,31 @@
    <ObjName>Fragment</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>Host</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>AbsoluteString</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>Password</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>Path</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>Port</ObjName>
@@ -722,16 +817,19 @@
    <ObjName>Query</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>Scheme</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
   <ViewProperty>
    <ObjName>User</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
  </ViewBehavior>
 </block>
