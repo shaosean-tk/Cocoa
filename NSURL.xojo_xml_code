@@ -203,6 +203,8 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Convert() As Ptr</SourceLine>
+   <SourceLine>// convert this instance to a Ptr</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
    <SourceLine>Return me.mInstanceRef</SourceLine>
    <SourceLine>#endif</SourceLine>
@@ -233,6 +235,25 @@
   <IsShared>1</IsShared>
   <ItemParams>aFolderItem As FolderItem</ItemParams>
   <ItemResult>NSURL</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As String</SourceLine>
+   <SourceLine>// convert this instance to a string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return me.AbsoluteString</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
  </Method>
  <Note>
   <ItemName>Notes</ItemName>
@@ -469,7 +490,7 @@
    <SourceLine>Return absoluteString(me)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>#else</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Return me.mAbsoluteString</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Get</SourceLine>
   </GetAccessor>
