@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2014r2.1" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="871613483">
  <ObjName>NSURL</ObjName>
  <ObjContainerID>1530803403</ObjContainerID>
@@ -186,6 +186,11 @@
    <SourceLine>Sub Constructor(instanceRef As Ptr)</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
    <SourceLine>me.mInstanceRef = instanceRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// retain</SourceLine>
+   <SourceLine>Declare Function retain Lib "Cocoa" Selector "retain" (instanceRef As Ptr) As Ptr</SourceLine>
+   <SourceLine>DIM unusedRef As Ptr = retain(me.mInstanceRef)</SourceLine>
+   <SourceLine>#Pragma Unused unusedRef</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
@@ -254,6 +259,26 @@
   <IsShared>0</IsShared>
   <ItemParams></ItemParams>
   <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Destructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Destructor()</SourceLine>
+   <SourceLine>#if TargetCocoa</SourceLine>
+   <SourceLine>Declare Sub release Lib "Cocoa" Selector "release" (instanceRef As Ptr)</SourceLine>
+   <SourceLine>release me.mInstanceRef</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
  </Method>
  <Note>
   <ItemName>Notes</ItemName>
@@ -855,6 +880,7 @@
    <ObjName>ResourceSpecifier</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
  </ViewBehavior>
 </block>
