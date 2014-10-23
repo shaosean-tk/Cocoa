@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2013r3.2" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2014r2.1" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="83466077">
  <ObjName>NSImage</ObjName>
  <ObjContainerID>1530803403</ObjContainerID>
@@ -239,10 +239,11 @@
    <SourceLine></SourceLine>
    <SourceLine>try</SourceLine>
    <SourceLine>#if TargetCocoa</SourceLine>
-   <SourceLine>' Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
-   <SourceLine>' DIM imageRef As Ptr = imageNamed(NSImageClassRef, name)</SourceLine>
-   <SourceLine>' #else</SourceLine>
-   <SourceLine>DIM imageRef As Picture = ImageNamed_(name)</SourceLine>
+   <SourceLine>Declare Function imageNamed Lib "Cocoa" Selector "imageNamed:" (classRef As Ptr, name As CFStringRef) As Ptr</SourceLine>
+   <SourceLine>DIM imageRef As Ptr = imageNamed(NSImageClassRef, name)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>#Pragma Unused name</SourceLine>
+   <SourceLine>' DIM imageRef As Picture = ImageNamed_(name)</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Return NEW NSImage(imageRef)</SourceLine>
@@ -438,75 +439,75 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Shared Function ImageNamed_(name As String) As Picture</SourceLine>
-   <SourceLine>// can't believe we have to do this, but here we go</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>DIM encodedImage As String</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>select case name</SourceLine>
-   <SourceLine>case NSImageNameActionTemplate</SourceLine>
-   <SourceLine>case NSImageNameAddTemplate</SourceLine>
-   <SourceLine>case NSImageNameAdvanced</SourceLine>
-   <SourceLine>case NSImageNameApplicationIcon</SourceLine>
-   <SourceLine>case NSImageNameBluetoothTemplate</SourceLine>
-   <SourceLine>case NSImageNameBonjour</SourceLine>
-   <SourceLine>case NSImageNameBookmarksTemplate</SourceLine>
-   <SourceLine>case NSImageNameCaution</SourceLine>
-   <SourceLine>case NSImageNameColorPanel</SourceLine>
-   <SourceLine>case NSImageNameColumnViewTemplate</SourceLine>
-   <SourceLine>case NSImageNameComputer</SourceLine>
-   <SourceLine>case NSImageNameDotMac</SourceLine>
-   <SourceLine>case NSImageNameEnterFullScreenTemplate</SourceLine>
-   <SourceLine>case NSImageNameEveryone</SourceLine>
-   <SourceLine>case NSImageNameExitFullScreenTemplate</SourceLine>
-   <SourceLine>case NSImageNameFlowViewTemplate</SourceLine>
-   <SourceLine>case NSImageNameFolder</SourceLine>
-   <SourceLine>case NSImageNameFolderBurnable</SourceLine>
-   <SourceLine>case NSImageNameFolderSmart</SourceLine>
-   <SourceLine>case NSImageNameFollowLinkFreestandingTemplate</SourceLine>
-   <SourceLine>case NSImageNameFontPanel</SourceLine>
-   <SourceLine>case NSImageNameGoLeftTemplate</SourceLine>
-   <SourceLine>case NSImageNameGoRightTemplate</SourceLine>
-   <SourceLine>case NSImageNameHomeTemplate</SourceLine>
-   <SourceLine>case NSImageNameIChatTheaterTemplate</SourceLine>
-   <SourceLine>case NSImageNameIconViewTemplate</SourceLine>
-   <SourceLine>case NSImageNameInfo</SourceLine>
-   <SourceLine>case NSImageNameInvalidDataFreestandingTemplate</SourceLine>
-   <SourceLine>case NSImageNameLeftFacingTriangleTemplate</SourceLine>
-   <SourceLine>case NSImageNameListViewTemplate</SourceLine>
-   <SourceLine>case NSImageNameLockLockedTemplate</SourceLine>
-   <SourceLine>case NSImageNameLockUnlockedTemplate</SourceLine>
-   <SourceLine>case NSImageNameMenuMixedStateTemplate</SourceLine>
-   <SourceLine>case NSImageNameMenuOnStateTemplate</SourceLine>
-   <SourceLine>case NSImageNameMobileMe</SourceLine>
-   <SourceLine>case NSImageNameMultipleDocuments</SourceLine>
-   <SourceLine>case NSImageNameNetwork</SourceLine>
-   <SourceLine>case NSImageNamePathTemplate</SourceLine>
-   <SourceLine>case NSImageNamePreferencesGeneral</SourceLine>
-   <SourceLine>case NSImageNameQuickLookTemplate</SourceLine>
-   <SourceLine>case NSImageNameRefreshFreestandingTemplate</SourceLine>
-   <SourceLine>case NSImageNameRefreshTemplate</SourceLine>
-   <SourceLine>case NSImageNameRemoveTemplate</SourceLine>
-   <SourceLine>case NSImageNameRevealFreestandingTemplate</SourceLine>
-   <SourceLine>case NSImageNameRightFacingTriangleTemplate</SourceLine>
-   <SourceLine>case NSImageNameShareTemplate</SourceLine>
-   <SourceLine>encodedImage = ""</SourceLine>
-   <SourceLine>case NSImageNameSlideshowTemplate</SourceLine>
-   <SourceLine>case NSImageNameSmartBadgeTemplate</SourceLine>
-   <SourceLine>case NSImageNameStatusAvailable</SourceLine>
-   <SourceLine>case NSImageNameStatusNone</SourceLine>
-   <SourceLine>case NSImageNameStatusPartiallyAvailable</SourceLine>
-   <SourceLine>case NSImageNameStatusUnavailable</SourceLine>
-   <SourceLine>case NSImageNameStopProgressFreestandingTemplate</SourceLine>
-   <SourceLine>case NSImageNameStopProgressTemplate</SourceLine>
-   <SourceLine>case NSImageNameTrashEmpty</SourceLine>
-   <SourceLine>case NSImageNameTrashFull</SourceLine>
-   <SourceLine>case NSImageNameUser</SourceLine>
-   <SourceLine>case NSImageNameUserAccounts</SourceLine>
-   <SourceLine>case NSImageNameUserGroup</SourceLine>
-   <SourceLine>case NSImageNameUserGuest</SourceLine>
-   <SourceLine>end select</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return Picture.FromData(DecodeBase64(encodedImage))</SourceLine>
+   <SourceLine>' // can't believe we have to do this, but here we go</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' DIM encodedImage As String</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' select case name</SourceLine>
+   <SourceLine>' case NSImageNameActionTemplate</SourceLine>
+   <SourceLine>' case NSImageNameAddTemplate</SourceLine>
+   <SourceLine>' case NSImageNameAdvanced</SourceLine>
+   <SourceLine>' case NSImageNameApplicationIcon</SourceLine>
+   <SourceLine>' case NSImageNameBluetoothTemplate</SourceLine>
+   <SourceLine>' case NSImageNameBonjour</SourceLine>
+   <SourceLine>' case NSImageNameBookmarksTemplate</SourceLine>
+   <SourceLine>' case NSImageNameCaution</SourceLine>
+   <SourceLine>' case NSImageNameColorPanel</SourceLine>
+   <SourceLine>' case NSImageNameColumnViewTemplate</SourceLine>
+   <SourceLine>' case NSImageNameComputer</SourceLine>
+   <SourceLine>' case NSImageNameDotMac</SourceLine>
+   <SourceLine>' case NSImageNameEnterFullScreenTemplate</SourceLine>
+   <SourceLine>' case NSImageNameEveryone</SourceLine>
+   <SourceLine>' case NSImageNameExitFullScreenTemplate</SourceLine>
+   <SourceLine>' case NSImageNameFlowViewTemplate</SourceLine>
+   <SourceLine>' case NSImageNameFolder</SourceLine>
+   <SourceLine>' case NSImageNameFolderBurnable</SourceLine>
+   <SourceLine>' case NSImageNameFolderSmart</SourceLine>
+   <SourceLine>' case NSImageNameFollowLinkFreestandingTemplate</SourceLine>
+   <SourceLine>' case NSImageNameFontPanel</SourceLine>
+   <SourceLine>' case NSImageNameGoLeftTemplate</SourceLine>
+   <SourceLine>' case NSImageNameGoRightTemplate</SourceLine>
+   <SourceLine>' case NSImageNameHomeTemplate</SourceLine>
+   <SourceLine>' case NSImageNameIChatTheaterTemplate</SourceLine>
+   <SourceLine>' case NSImageNameIconViewTemplate</SourceLine>
+   <SourceLine>' case NSImageNameInfo</SourceLine>
+   <SourceLine>' case NSImageNameInvalidDataFreestandingTemplate</SourceLine>
+   <SourceLine>' case NSImageNameLeftFacingTriangleTemplate</SourceLine>
+   <SourceLine>' case NSImageNameListViewTemplate</SourceLine>
+   <SourceLine>' case NSImageNameLockLockedTemplate</SourceLine>
+   <SourceLine>' case NSImageNameLockUnlockedTemplate</SourceLine>
+   <SourceLine>' case NSImageNameMenuMixedStateTemplate</SourceLine>
+   <SourceLine>' case NSImageNameMenuOnStateTemplate</SourceLine>
+   <SourceLine>' case NSImageNameMobileMe</SourceLine>
+   <SourceLine>' case NSImageNameMultipleDocuments</SourceLine>
+   <SourceLine>' case NSImageNameNetwork</SourceLine>
+   <SourceLine>' case NSImageNamePathTemplate</SourceLine>
+   <SourceLine>' case NSImageNamePreferencesGeneral</SourceLine>
+   <SourceLine>' case NSImageNameQuickLookTemplate</SourceLine>
+   <SourceLine>' case NSImageNameRefreshFreestandingTemplate</SourceLine>
+   <SourceLine>' case NSImageNameRefreshTemplate</SourceLine>
+   <SourceLine>' case NSImageNameRemoveTemplate</SourceLine>
+   <SourceLine>' case NSImageNameRevealFreestandingTemplate</SourceLine>
+   <SourceLine>' case NSImageNameRightFacingTriangleTemplate</SourceLine>
+   <SourceLine>' case NSImageNameShareTemplate</SourceLine>
+   <SourceLine>' encodedImage = ""</SourceLine>
+   <SourceLine>' case NSImageNameSlideshowTemplate</SourceLine>
+   <SourceLine>' case NSImageNameSmartBadgeTemplate</SourceLine>
+   <SourceLine>' case NSImageNameStatusAvailable</SourceLine>
+   <SourceLine>' case NSImageNameStatusNone</SourceLine>
+   <SourceLine>' case NSImageNameStatusPartiallyAvailable</SourceLine>
+   <SourceLine>' case NSImageNameStatusUnavailable</SourceLine>
+   <SourceLine>' case NSImageNameStopProgressFreestandingTemplate</SourceLine>
+   <SourceLine>' case NSImageNameStopProgressTemplate</SourceLine>
+   <SourceLine>' case NSImageNameTrashEmpty</SourceLine>
+   <SourceLine>' case NSImageNameTrashFull</SourceLine>
+   <SourceLine>' case NSImageNameUser</SourceLine>
+   <SourceLine>' case NSImageNameUserAccounts</SourceLine>
+   <SourceLine>' case NSImageNameUserGroup</SourceLine>
+   <SourceLine>' case NSImageNameUserGuest</SourceLine>
+   <SourceLine>' end select</SourceLine>
+   <SourceLine>' </SourceLine>
+   <SourceLine>' Return Picture.FromData(DecodeBase64(encodedImage))</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
